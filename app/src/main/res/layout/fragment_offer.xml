@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F7F7"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Exclusive Offers Section -->
+        <TextView
+            android:id="@+id/exclusiveOffersTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Exclusive Offers"
+            android:textColor="#1A1A1A"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="16dp" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingEnd="16dp">
+
+                <!-- Offer 1 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="160dp"
+                    android:layout_height="200dp"
+                    android:layout_marginEnd="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_gradient_offer"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:contentDescription="Offer 1"
+                            android:src="@drawable/slider_image_1"
+                            android:scaleType="centerCrop"
+                            android:adjustViewBounds="true"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="16dp"
+                            app:shapeAppearanceOverlay="@style/RoundedCorners" />
+
+                        <!-- Title -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="30% Off Spa"
+                            android:textColor="@color/primary_variant"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Description -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Relax and rejuvenate with our exclusive spa discount."
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            android:gravity="center"
+                            android:maxLines="2"
+                            android:ellipsize="end" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Offer 2 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="160dp"
+                    android:layout_height="200dp"
+                    android:layout_marginEnd="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_gradient_offer"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:contentDescription="Offer 1"
+                            android:src="@drawable/slider_image_1"
+                            android:scaleType="centerCrop"
+                            android:adjustViewBounds="true"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="16dp"
+                            app:shapeAppearanceOverlay="@style/RoundedCorners" />
+
+                        <!-- Title -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="30% Off Spa"
+                            android:textColor="@color/primary_variant"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Description -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Relax and rejuvenate with our exclusive spa discount."
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            android:gravity="center"
+                            android:maxLines="2"
+                            android:ellipsize="end" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Offer 3 -->
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- In-House Services Section -->
+        <TextView
+            android:id="@+id/inHouseServicesTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="In-House Services"
+            android:textColor="@color/text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:paddingBottom="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
+
+            <!-- Spa Treatments Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_spa"
+                        android:contentDescription="Spa Treatments"
+                        app:tint="@color/primary" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingStart="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Spa Treatments"
+                            android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Indulge in our exclusive spa treatments."
+                            android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginTop="4dp" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Reserve Now"
+                            android:textColor="@color/text_on_primary"
+                        android:backgroundTint="@color/primary"
+                        android:layout_marginTop="8dp"
+                        app:cornerRadius="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Fine Dining Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_dining"
+                        android:contentDescription="Fine Dining"
+                        app:tint="@color/secondary" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingStart="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Fine Dining"
+                            android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Experience gourmet dining at its best."
+                            android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginTop="4dp" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Reserve Now"
+                            android:textColor="@color/text_on_primary"
+                        android:backgroundTint="@color/secondary"
+                        android:layout_marginTop="8dp"
+                        app:cornerRadius="12dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <!-- Upcoming Events Section -->
+        <TextView
+            android:id="@+id/upcomingEventsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upcoming Events"
+            android:textColor="#1A1A1A"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="16dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sunset Yoga Session"
+                    android:textColor="#1A1A1A"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A relaxing group wellness session."
+                    android:textColor="#666666"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Join Now"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#FF6F00"
+                    android:layout_marginTop="8dp"
+                    app:cornerRadius="12dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</ScrollView>

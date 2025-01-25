@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="12dp"
+    android:layout_marginHorizontal="16dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Room Image Section -->
+        <ImageView
+            android:id="@+id/img_room_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Room Thumbnail"
+            android:src="@drawable/slider_image_1"
+            android:background="@drawable/rounded_background"
+            android:elevation="6dp"
+            android:clipToOutline="true"
+            android:outlineProvider="background"/>
+
+        <!-- Details Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="16dp">
+
+            <!-- Room Name -->
+            <TextView
+                android:id="@+id/txt_room_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ocean View Suite"
+                android:textColor="#1A1A1A"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:letterSpacing="0.02"/>
+
+            <!-- Room Description -->
+            <TextView
+                android:id="@+id/txt_room_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="A luxurious room with a stunning ocean view. The Ocean View Suite offers premium comfort with a king-size bed, free Wi-Fi, a private balcony, and more. Perfect for a relaxing stay with all the amenities you need."
+                android:textColor="#666666"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="3"
+                android:ellipsize="end"/>
+
+            <!-- Price Section -->
+            <TextView
+                android:id="@+id/txt_room_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="₨ 63,500/night"
+                android:textColor="#FF6F00"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:letterSpacing="0.02"/>
+
+            <!-- Book Now Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_book_now"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingVertical="12dp"
+                android:backgroundTint="#FF6F00"
+                android:text="Book Now"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

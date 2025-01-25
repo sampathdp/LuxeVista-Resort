@@ -1,64 +1,62 @@
 package com.dreampixel.luxevistaresort;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link BookNowFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.Calendar;
+
+
 public class BookNowFragment extends Fragment {
+    private TextView checkInDate, checkOutDate;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public BookNowFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BookNowFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static BookNowFragment newInstance(String param1, String param2) {
-        BookNowFragment fragment = new BookNowFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_book_now, container, false);
+
+        checkInDate = view.findViewById(R.id.checkInDate);
+        checkOutDate = view.findViewById(R.id.checkOutDate);
+
+        checkInDate.setOnClickListener(v -> showDatePickerDialog(checkInDate));
+        checkOutDate.setOnClickListener(v -> showDatePickerDialog(checkOutDate));
+
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_book_now, container, false);
+    private void showDatePickerDialog(TextView targetTextView) {
+        // Get the current date
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Create a new DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                requireContext(),
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    // Format the selected date
+                    String formattedDate = formatDate(selectedYear, selectedMonth, selectedDay);
+                    targetTextView.setText(formattedDate);
+                },
+                year, month, day);
+
+        // Show the dialog
+        datePickerDialog.show();
+    }
+
+    private String formatDate(int year, int month, int day) {
+        Calendar selectedDate = Calendar.getInstance();
+        selectedDate.set(year, month, day);
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMM dd yyyy");
+        return sdf.format(selectedDate.getTime());
     }
 }
