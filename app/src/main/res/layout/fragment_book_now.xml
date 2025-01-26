@@ -44,7 +44,7 @@
                 android:src="@drawable/slider_image_3"
                 android:scaleType="centerCrop"
                 app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearanceOverlay="@style/RoundedImageView" />
+                app:shapeAppearanceOverlay="@style/RoundedCorners" />
 
             <!-- Title -->
             <TextView

@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.material.card.MaterialCardView;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,23 +29,33 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         ViewSlider(view);
-        BookNow(view);
-
+        ViewBookNow(view);
+        ViewRooms(view);
         return view;
     }
 
     // Navigate to BookNowFragment
-    void BookNow(View view){
-        // Set up button click
+    void ViewBookNow(View view){
+
         Button bookNowButton = view.findViewById(R.id.btn_room_book);
         bookNowButton.setOnClickListener(v -> {
-            // Open BookNowFragment
+
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new BookNowFragment()) // Replace with container ID
+                    .replace(R.id.fragment_container, new BookNowFragment())
                     .addToBackStack(null)
                     .commit();
         });
     }
+    public void ViewRooms(View view) {
+        MaterialCardView bookRoomCard = view.findViewById(R.id.card_book_room);
+        bookRoomCard.setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new RoomSectionFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+    }
+
 
     // Initialize ViewPager2
     void ViewSlider(View view){

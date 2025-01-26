@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,49 +10,27 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- App Logo -->
+        <!-- Profile Picture Placeholder -->
         <ImageView
-            android:id="@+id/app_logo"
+            android:id="@+id/iv_profile_picture"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_app_logo"
-            android:contentDescription="App Logo" />
+            android:src="@drawable/ic_profile_placeholder"
+            android:contentDescription="Profile Picture"
+            android:layout_marginBottom="16dp" />
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/register_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            android:text="Welcome to Sea View"
-            android:textColor="@color/primary"
-            android:textSize="28sp"
-            android:fontFamily="sans-serif-medium" />
-
-        <!-- Subtitle -->
-        <TextView
-            android:id="@+id/register_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:text="Create your account"
-            android:textColor="@color/text_secondary"
-            android:textSize="16sp"
-            android:fontFamily="sans-serif" />
-
-        <!-- Name Input -->
+        <!-- Full Name Input -->
         <EditText
-            android:id="@+id/et_name"
+            android:id="@+id/et_full_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
             android:hint="Full Name"
             android:inputType="textPersonName"
+            android:drawableStart="@drawable/baseline_person_24"
+            android:drawablePadding="8dp"
             android:background="@drawable/input_field_background"
-            android:padding="16dp"
+            android:padding="14dp"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_secondary" />
 
@@ -62,63 +39,124 @@
             android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Email Address"
+            android:hint="Email"
             android:inputType="textEmailAddress"
+            android:drawableStart="@drawable/baseline_email_24"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/input_field_background"
-            android:padding="16dp"
+            android:padding="14dp"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_secondary" />
+
+        <!-- Contact Number Input -->
+        <EditText
+            android:id="@+id/et_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contact"
+            android:inputType="phone"
+            android:drawableStart="@drawable/baseline_smartphone_24"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/input_field_background"
+            android:padding="14dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary" />
+
+        <!-- Date of Birth Input -->
+        <EditText
+            android:id="@+id/et_dob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date of Birth"
+            android:inputType="date"
+            android:drawableStart="@drawable/baseline_perm_contact_calendar_24"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/input_field_background"
+            android:padding="14dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary" />
+
+        <!-- Gender Selection -->
+        <RadioGroup
+            android:id="@+id/rg_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <RadioButton
+                android:id="@+id/rb_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:textColor="@color/text_primary" />
+
+            <RadioButton
+                android:id="@+id/rb_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:textColor="@color/text_primary"
+                android:layout_marginStart="20dp" />
+        </RadioGroup>
+
+        <!-- User Role Spinner -->
+        <Spinner
+            android:id="@+id/sp_user_role"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/input_field_background"
+            android:padding="14dp" />
 
         <!-- Password Input -->
         <EditText
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:hint="Password"
             android:inputType="textPassword"
+            android:drawableStart="@drawable/baseline_password_24"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/input_field_background"
-            android:padding="16dp"
+            android:padding="14dp"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_secondary" />
 
-        <!-- Confirm Password Input -->
-        <EditText
-            android:id="@+id/et_confirm_password"
+        <!-- Terms and Conditions Checkbox -->
+        <CheckBox
+            android:id="@+id/cb_terms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Confirm Password"
-            android:inputType="textPassword"
-            android:background="@drawable/input_field_background"
-            android:padding="16dp"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary" />
+            android:layout_marginTop="12dp"
+            android:text="I agree to Terms and Conditions"
+            android:textColor="@color/text_primary" />
 
         <!-- Register Button -->
         <Button
             android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Create Account"
-            android:textColor="@color/background"
-            android:backgroundTint="@color/primary"
-            android:padding="16dp"
-            android:textSize="16sp"
-            android:elevation="2dp" />
+            android:layout_marginTop="16dp"
+            android:text="Register"
+            android:textColor="@color/text_on_primary"
+            android:background="@color/button_primary"
+            android:padding="14dp"
+            android:textSize="16sp" />
 
-        <!-- Sign In Redirect -->
+        <!-- Login Redirect -->
         <TextView
             android:id="@+id/tv_login_redirect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            android:text="Already have an account? Sign in"
-            android:textColor="@color/secondary"
-            android:textSize="16sp" />
-
+            android:layout_marginTop="12dp"
+            android:text="Already have an account? Login"
+            android:textColor="@color/primary"
+            android:textSize="14sp" />
     </LinearLayout>
 </ScrollView>
