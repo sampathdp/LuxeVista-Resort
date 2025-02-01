@@ -1,12 +1,10 @@
 package com.dreampixel.luxevistaresort;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,9 +13,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Replace the container with the WelcomeFragment
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new WelcomeFragment())
-                .commit();
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        if (isFirstLaunch) {
+            transaction.replace(R.id.fragmentContainer_Main, new WelcomeFragment());
+        } else {
+            transaction.replace(R.id.fragmentContainer_Main, new LoginFragment());
+        }
+
+        transaction.commit();
+
+        // Save flag after commit to avoid premature update
+        if (isFirstLaunch) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("isFirstLaunch", false);
+            editor.apply();
+        }
     }
 }

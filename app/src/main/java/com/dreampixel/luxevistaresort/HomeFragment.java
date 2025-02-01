@@ -56,23 +56,18 @@ public class HomeFragment extends Fragment {
         });
     }
 
-
-    // Initialize ViewPager2
     void ViewSlider(View view){
         featuredCarousel = view.findViewById(R.id.featuredCarousel);
 
-        // Sample images for the slider
         List<Integer> images = Arrays.asList(
                 R.drawable.slider_image_1,
                 R.drawable.slider_image_2,
                 R.drawable.slider_image_3
         );
 
-        // Set up the adapter
         CarouselAdapter adapter = new CarouselAdapter(images);
         featuredCarousel.setAdapter(adapter);
 
-        // Add smooth scaling effect
         featuredCarousel.setPageTransformer((page, position) -> {
             float absPos = Math.abs(position);
             page.setScaleY(1 - (0.25f * absPos));

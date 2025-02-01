@@ -15,15 +15,12 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Initialize BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // Set default fragment
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
         }
 
-        // Handle navigation item selection
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -47,7 +44,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    // Method to load fragments dynamically
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
