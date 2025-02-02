@@ -73,7 +73,6 @@ public class LoginFragment extends Fragment {
             String password = passwordField.getText().toString();
 
             if (dbHelper.checkUserExists(email, password)) {
-                // Proceed to next activity or fragment (e.g. HomePage)
                 Toast.makeText(getActivity(), "Login successful", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), "Invalid credentials", Toast.LENGTH_SHORT).show();

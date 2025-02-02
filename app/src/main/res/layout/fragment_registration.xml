@@ -87,6 +87,7 @@
 
             <!-- Gender Selection -->
             <RadioGroup
+                android:id="@+id/rg_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -137,7 +138,7 @@
 
             <!-- Register Button -->
             <Button
-                android:id="@+id/btn_login_redirect"
+                android:id="@+id/btn_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Register"

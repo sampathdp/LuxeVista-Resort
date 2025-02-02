@@ -7,15 +7,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-
-    private static final String DATABASE_NAME = "user_data.db";
+    private static final String DATABASE_NAME = "UsersDB";
     private static final int DATABASE_VERSION = 1;
-
     private static final String TABLE_USERS = "users";
+
     private static final String COLUMN_ID = "id";
-    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_FULL_NAME = "full_name";
     private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_CONTACT = "contact";
+    private static final String COLUMN_DOB = "dob";
+    private static final String COLUMN_GENDER = "gender";
     private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_PROFILE_IMAGE = "profile_image";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -23,12 +26,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_TABLE = "CREATE TABLE " + TABLE_USERS + "("
+        String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + COLUMN_NAME + " TEXT,"
+                + COLUMN_FULL_NAME + " TEXT,"
                 + COLUMN_EMAIL + " TEXT UNIQUE,"
-                + COLUMN_PASSWORD + " TEXT)";
-        db.execSQL(CREATE_TABLE);
+                + COLUMN_CONTACT + " TEXT,"
+                + COLUMN_DOB + " TEXT,"
+                + COLUMN_GENDER + " TEXT,"
+                + COLUMN_PASSWORD + " TEXT,"
+                + COLUMN_PROFILE_IMAGE + " TEXT)";
+        db.execSQL(CREATE_USERS_TABLE);
     }
 
     @Override
@@ -37,24 +44,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertUser(String name, String email, String password) {
+    public boolean registerUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_NAME, name);
-        contentValues.put(COLUMN_EMAIL, email);
-        contentValues.put(COLUMN_PASSWORD, password);
+        ContentValues values = new ContentValues();
 
-        long result = db.insert(TABLE_USERS, null, contentValues);
+        values.put(COLUMN_FULL_NAME, user.getFullName());
+        values.put(COLUMN_EMAIL, user.getEmail());
+        values.put(COLUMN_CONTACT, user.getContact());
+        values.put(COLUMN_DOB, user.getDob());
+        values.put(COLUMN_GENDER, user.getGender());
+        values.put(COLUMN_PASSWORD, user.getPassword());
+        values.put(COLUMN_PROFILE_IMAGE, user.getProfileImage());
+
+        long result = db.insert(TABLE_USERS, null, values);
         db.close();
+
         return result != -1;
     }
 
     public boolean checkUserExists(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " =? AND " + COLUMN_PASSWORD + " =?";
-        Cursor cursor = db.rawQuery(query, new String[]{email, password});
-        boolean exists = cursor.getCount() > 0;
+        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_ID}, COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?",
+                new String[]{email, password}, null, null, null);
+
+        boolean isAuthenticated = cursor.getCount() > 0;
         cursor.close();
-        return exists;
+        db.close();
+
+        return isAuthenticated;
     }
 }

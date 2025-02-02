@@ -1,75 +1,129 @@
 package com.dreampixel.luxevistaresort;
 
+import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager2.widget.ViewPager2;
-
+import android.util.Base64;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import java.util.Arrays;
-import java.util.List;
+import androidx.fragment.app.Fragment;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Calendar;
+import java.util.regex.Pattern;
 
 public class RegistrationFragment extends Fragment {
 
-    private Button btn_signInLink;
-    private EditText fullNameField, emailField, passwordField;
-    private Button registerButton;
+    private EditText etFullName, etEmail, etContact, etPassword, etDob;
+    private RadioGroup rgGender;
+    private CheckBox cbTerms;
+    private Button btnRegister;
+    private ImageView ivProfile;
     private DatabaseHelper dbHelper;
 
-    @Override
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z]).{6,}$");
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
 
-        OpenSignUpPage(view);
-        SignUp(view);
+        etFullName = view.findViewById(R.id.et_full_name);
+        etEmail = view.findViewById(R.id.et_email);
+        etContact = view.findViewById(R.id.et_contact);
+        etDob = view.findViewById(R.id.et_dob);
+        rgGender = view.findViewById(R.id.rg_gender);
+        etPassword = view.findViewById(R.id.et_password);
+        btnRegister = view.findViewById(R.id.btn_register);
+        ivProfile = view.findViewById(R.id.iv_profile_picture);
+        cbTerms = view.findViewById(R.id.cb_terms);
+
+        dbHelper = new DatabaseHelper(getActivity());
+
+        etDob.setOnClickListener(v -> showDatePicker());
+        btnRegister.setOnClickListener(v -> registerUser());
+
         return view;
     }
 
-    void OpenSignUpPage(View view){
-        btn_signInLink = view.findViewById(R.id.btn_login_redirect);
-
-        btn_signInLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getActivity() != null) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentContainer_Main, new LoginFragment());
-                    transaction.commit();
-                }
-            }
-        });
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+                (view, year, month, day) -> etDob.setText(day + "/" + (month + 1) + "/" + year),
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        dialog.show();
     }
 
-    void SignUp(View view){
-        dbHelper = new DatabaseHelper(getActivity());
+    private void registerUser() {
+        String fullName = etFullName.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String contact = etContact.getText().toString().trim();
+        String dob = etDob.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+        String gender = null;
+        if (rgGender.getCheckedRadioButtonId() != -1) {
+            gender = ((RadioButton) getView().findViewById(rgGender.getCheckedRadioButtonId())).getText().toString();
+        }
 
-        fullNameField = view.findViewById(R.id.et_full_name);
-        emailField = view.findViewById(R.id.et_email);
-        passwordField = view.findViewById(R.id.et_password);
-        registerButton = view.findViewById(R.id.btn_login_redirect);
+        if (fullName.isEmpty() || email.isEmpty() || contact.isEmpty() || dob.isEmpty() || password.isEmpty() || gender == null) {
+            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        registerButton.setOnClickListener(v -> {
-            String fullName = fullNameField.getText().toString();
-            String email = emailField.getText().toString();
-            String password = passwordField.getText().toString();
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(getActivity(), "Enter a valid email address", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            boolean isInserted = dbHelper.insertUser(fullName, email, password);
-            if (isInserted) {
-                Toast.makeText(getActivity(), "Registration successful", Toast.LENGTH_SHORT).show();
-                // Redirect to login fragment or another page
-            } else {
-                Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (!contact.matches("\\d{10}")) {
+            Toast.makeText(getActivity(), "Contact number must be exactly 10 digits", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!PASSWORD_PATTERN.matcher(password).matches()) {
+            Toast.makeText(getActivity(), "Password must have at least 6 characters and one uppercase letter", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!cbTerms.isChecked()) {
+            Toast.makeText(getActivity(), "Please accept the terms and conditions", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Get profile image
+        byte[] profileImage = imageToByteArray();
+        if (profileImage == null) {
+            Toast.makeText(getActivity(), "Please select a profile picture", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        User user = new User(fullName, email, contact, dob, gender, password, profileImage);
+
+        if (dbHelper.registerUser(user)) {
+            Toast.makeText(getActivity(), "Registration Successful!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Email already exists!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private byte[] imageToByteArray() {
+        if (ivProfile.getDrawable() == null) {
+            return null;
+        }
+
+        Bitmap bitmap = ((BitmapDrawable) ivProfile.getDrawable()).getBitmap();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        return outputStream.toByteArray();
     }
 }
