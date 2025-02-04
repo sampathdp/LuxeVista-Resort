@@ -1,5 +1,6 @@
 package com.dreampixel.luxevistaresort;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
@@ -19,19 +21,23 @@ import java.util.List;
 
 public class LoginFragment extends Fragment {
 
-    private Button btn_signUp_Link;
-
     private EditText emailField, passwordField;
-    private Button loginButton;
-    private DatabaseHelper dbHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        TextView btn_signUp_Link = view.findViewById(R.id.registerLink);
+        Button loginButton = view.findViewById(R.id.loginButton);
+
+        emailField = view.findViewById(R.id.emailField);
+        passwordField = view.findViewById(R.id.passwordField);
+
+        loginButton.setOnClickListener(v->SignIn());
+        btn_signUp_Link.setOnClickListener(v -> OpenSignUpPage());
+
         Slider(view);
-        OpenSignUpPage(view);
-        SignIn(view);
+
         return view;
     }
     void Slider(View view){
@@ -45,38 +51,32 @@ public class LoginFragment extends Fragment {
         SliderAdapter adapter = new SliderAdapter(images);
         viewPager.setAdapter(adapter);
     }
-    void OpenSignUpPage(View view){
-        btn_signUp_Link = view.findViewById(R.id.registerLink);
+    void OpenSignUpPage(){
 
-        btn_signUp_Link.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getActivity() != null) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentContainer_Main, new RegistrationFragment());
-                    transaction.commit();
-                }
-            }
-        });
+        if (getActivity() != null) {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.fragmentContainer_Main, new RegistrationFragment());
+            transaction.commit();
+        }
+
     }
 
-    void SignIn(View view){
-        dbHelper = new DatabaseHelper(getActivity());
+    void SignIn(){
+        DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
+        String email = emailField.getText().toString();
+        String password = passwordField.getText().toString();
 
-        emailField = view.findViewById(R.id.emailField);
-        passwordField = view.findViewById(R.id.passwordField);
-        loginButton = view.findViewById(R.id.loginButton);
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(getActivity(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        loginButton.setOnClickListener(v -> {
-            String email = emailField.getText().toString();
-            String password = passwordField.getText().toString();
-
-            if (dbHelper.checkUserExists(email, password)) {
-                Toast.makeText(getActivity(), "Login successful", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getActivity(), "Invalid credentials", Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (dbHelper.checkUserExists(email, password)) {
+            Intent intent = new Intent(this.getActivity(), HomeActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getActivity(), "Invalid credentials", Toast.LENGTH_SHORT).show();
+        }
     }
 }
