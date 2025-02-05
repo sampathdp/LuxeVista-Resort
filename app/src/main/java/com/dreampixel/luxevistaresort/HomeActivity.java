@@ -1,5 +1,6 @@
 package com.dreampixel.luxevistaresort;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -14,6 +15,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -42,6 +44,8 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+
     }
 
     private void loadFragment(Fragment fragment) {

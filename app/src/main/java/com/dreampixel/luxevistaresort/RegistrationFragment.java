@@ -21,10 +21,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -61,6 +64,8 @@ public class RegistrationFragment extends Fragment {
         btnRegister.setOnClickListener(v -> registerUser());
         ivProfile.setOnClickListener(v -> selectImageFromGallery());
 
+        TextView btn_signUp_Link = view.findViewById(R.id.loginLink);
+        btn_signUp_Link.setOnClickListener(v -> OpenSignInPage());
         return view;
     }
 
@@ -146,6 +151,17 @@ public class RegistrationFragment extends Fragment {
                 }
             }
         }
+    }
+
+    void OpenSignInPage(){
+
+        if (getActivity() != null) {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.fragmentContainer_Main, new LoginFragment());
+            transaction.commit();
+        }
+
     }
 
 }

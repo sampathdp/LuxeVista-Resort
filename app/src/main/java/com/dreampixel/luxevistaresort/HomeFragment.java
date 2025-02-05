@@ -1,5 +1,6 @@
 package com.dreampixel.luxevistaresort;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public class HomeFragment extends Fragment {
         ViewSlider(view);
         ViewBookNow(view);
         ViewRooms(view);
+
         return view;
     }
 
