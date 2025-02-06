@@ -10,8 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,24 +32,39 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     private ViewPager2 featuredCarousel;
-    private LinearLayout roomOffersContainer;
-    private DatabaseHelper dbHelper;
+    private RecyclerView recyclerView;
+    private RoomAdapter roomAdapter;
+    private DatabaseHelper databaseHelper;
+    private List<Room> roomList;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        recyclerView = view.findViewById(R.id.recyclerViewRooms);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+
+        databaseHelper = new DatabaseHelper(getContext());
+        roomList = databaseHelper.getLatestRooms();
+
+        if (roomList.isEmpty()) {
+            Log.e("RecyclerViewDebug", "No rooms found in database!");
+        }
+
+        roomAdapter = new RoomAdapter(getContext(), roomList);
+        recyclerView.setAdapter(roomAdapter);
+        roomAdapter.notifyDataSetChanged();
+
+        if (!roomList.isEmpty()) {
+            roomAdapter.updateRoomList(roomList);
+        }
+
         ViewSlider(view);
 
-        roomOffersContainer = view.findViewById(R.id.roomOffersContainer);
-
-        dbHelper = new DatabaseHelper(getContext());
-
-        loadLatestRooms();
-
-
         return view;
+
     }
 
     // Navigate to BookNowFragment
@@ -71,35 +89,6 @@ public class HomeFragment extends Fragment {
 //        });
 //    }
 
-
-
-    private void loadLatestRooms() {
-        List<Room> latestRooms = dbHelper.getLatestRooms(3);
-
-        for (Room room : latestRooms) {
-            View roomView = LayoutInflater.from(getContext()).inflate(R.layout.item_room_offer, roomOffersContainer, false);
-
-            ImageView roomImage = roomView.findViewById(R.id.iv_room_image);
-            TextView tvRoomType = roomView.findViewById(R.id.tv_room_type);
-            TextView tvRoomDescription = roomView.findViewById(R.id.tv_room_description);
-            TextView tvRoomPrice = roomView.findViewById(R.id.tv_room_price);
-            Button btnBook = roomView.findViewById(R.id.btn_room_book);
-
-            // Set Room Data
-            tvRoomType.setText(room.getType());
-            tvRoomDescription.setText(room.getDescription());
-            tvRoomPrice.setText("Price: LKR " + room.getPricePerNight() + " per night");
-
-            // Convert BLOB image to Bitmap
-            if (room.getImage() != null) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(room.getImage(), 0, room.getImage().length);
-                roomImage.setImageBitmap(bitmap);
-            } else {
-                roomImage.setImageResource(R.drawable.slider_image_1); // Default image if null
-            }
-            roomOffersContainer.addView(roomView);
-        }
-    }
 
     void ViewSlider(View view){
         featuredCarousel = view.findViewById(R.id.featuredCarousel);

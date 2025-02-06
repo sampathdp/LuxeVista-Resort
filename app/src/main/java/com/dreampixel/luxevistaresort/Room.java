@@ -4,18 +4,14 @@ public class Room {
     private int id;
     private String type;
     private String description;
-    private int maxOccupancy;
-    private double pricePerNight;
-    private int count;
+    private double price;
     private byte[] image;
 
-    public Room(int id, String type, String description, int maxOccupancy, double pricePerNight, int count, byte[] image) {
+    public Room(int id, String type, String description, double price, byte[] image) {
         this.id = id;
         this.type = type;
         this.description = description;
-        this.maxOccupancy = maxOccupancy;
-        this.pricePerNight = pricePerNight;
-        this.count = count;
+        this.price = price;
         this.image = image;
     }
 
@@ -43,28 +39,12 @@ public class Room {
         this.description = description;
     }
 
-    public int getMaxOccupancy() {
-        return maxOccupancy;
+    public double getPrice() {
+        return price;
     }
 
-    public void setMaxOccupancy(int maxOccupancy) {
-        this.maxOccupancy = maxOccupancy;
-    }
-
-    public double getPricePerNight() {
-        return pricePerNight;
-    }
-
-    public void setPricePerNight(double pricePerNight) {
-        this.pricePerNight = pricePerNight;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public byte[] getImage() {

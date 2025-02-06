@@ -70,7 +70,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create Users Table
@@ -109,7 +108,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_ROOM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_ROOM_TYPE + " TEXT, "
                 + COLUMN_ROOM_DESCRIPTION + " TEXT, "
-                + COLUMN_ROOM_MAX_OCCUPANCY + " INTEGER, "
                 + COLUMN_ROOM_PRICE_PER_NIGHT + " REAL, "
                 + COLUMN_ROOM_COUNT + " INTEGER, "
                 + COLUMN_ROOM_IMAGE + " BLOB)";
@@ -132,7 +130,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         insertCategories(db);
         insertServices(db);
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
@@ -142,7 +139,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOOKINGS);
         onCreate(db);
     }
-
     public boolean registerUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -160,7 +156,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return result != -1;
     }
-
     public boolean checkUserExists(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_ID}, COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?",
@@ -172,39 +167,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return isAuthenticated;
     }
-
     private void insertRooms(SQLiteDatabase db) {
 
         setRoom(db, "Deluxe Suite",
                 "Spacious room with ocean view",
                 4,
-                250.0,
                 10,
                 R.drawable.slider_image_1);
 
         setRoom(db, "Executive Room",
                 "Luxury room with city view",
                 3,
-                180.0,
                 8,
                 R.drawable.slider_image_2);
 
         setRoom(db, "Standard Room",
                 "Cozy room for two",
                 2,
-                120.0,
                 15,
                 R.drawable.slider_image_3);
     }
-
-    private void setRoom(SQLiteDatabase db, String type, String description,
-                            int maxOccupancy, double pricePerNight,
+    private void setRoom(SQLiteDatabase db, String type, String description, double pricePerNight,
                             int roomCount, int imageResourceId) {
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_ROOM_TYPE, type);
         values.put(COLUMN_ROOM_DESCRIPTION, description);
-        values.put(COLUMN_ROOM_MAX_OCCUPANCY, maxOccupancy);
         values.put(COLUMN_ROOM_PRICE_PER_NIGHT, pricePerNight);
         values.put(COLUMN_ROOM_COUNT, roomCount);
 
@@ -215,7 +203,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.insert(TABLE_ROOMS, null, values);
     }
-
     private void insertCategories(SQLiteDatabase db) {
         setCategory(db, "Spa", "Relaxing spa treatments");
         setCategory(db, "Fine Dining", "Luxury gourmet experiences");
@@ -223,7 +210,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         setCategory(db, "Beach Tours", "Guided scenic tours");
         setCategory(db, "Water Sports", "Thrilling water adventures");
     }
-
     private void setCategory(SQLiteDatabase db, String name, String description) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_CATEGORY_NAME, name);
@@ -232,7 +218,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Use insertWithOnConflict to avoid duplicate errors
         db.insertWithOnConflict(TABLE_SERVICE_CATEGORIES, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
-
     private void insertServices(SQLiteDatabase db) {
         int spaCategoryId = getCategoryId(db, "Spa");
         int diningCategoryId = getCategoryId(db, "Fine Dining");
@@ -246,8 +231,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         setService(db, poolCategoryId, "Cabana Rental", "Private poolside cabana for the day", 80.0, R.drawable.slider_image_1);
     }
-
-
     private void setService(SQLiteDatabase db, int categoryId, String name, String description, double price, int imageResourceId) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_SERVICE_CATEGORY_ID, categoryId);
@@ -263,7 +246,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.insert(TABLE_SERVICES, null, values);
     }
-
     private int getCategoryId(SQLiteDatabase db, String categoryName) {
         int categoryId = -1;
 
@@ -277,13 +259,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return categoryId;
 
     }
-
     private byte[] getImageBytesFromDrawable(int drawableId) {
         try {
-            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true; // Load only the image size, not the bitmap
+            BitmapFactory.decodeResource(context.getResources(), drawableId, options);
+
+            // Determine the best sample size (power of 2) to downscale the image
+            options.inSampleSize = calculateInSampleSize(options, 800, 800);
+            options.inJustDecodeBounds = false; // Load the full bitmap with sampling
+
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId, options);
             if (bitmap != null) {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream); // 75% quality for optimal balance
                 return stream.toByteArray();
             }
         } catch (Exception e) {
@@ -291,33 +280,69 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return null;
     }
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        int height = options.outHeight;
+        int width = options.outWidth;
+        int inSampleSize = 1;
 
-    public List<Room> getLatestRooms(int limit) {
+        if (height > reqHeight || width > reqWidth) {
+            int halfHeight = height / 2;
+            int halfWidth = width / 2;
+
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
+    List<Room> getLatestRooms() {
         List<Room> roomList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
 
-        String query = "SELECT * FROM " + TABLE_ROOMS + " ORDER BY " + COLUMN_ROOM_ID + " DESC LIMIT " + limit;
-        Cursor cursor = db.rawQuery(query, null);
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + TABLE_ROOMS + " ORDER BY " + COLUMN_ROOM_ID + " DESC LIMIT 3", null);
+            if (cursor == null) {
+                Log.e("DatabaseError", "Cursor is null. Query failed.");
+                return roomList;
+            }
 
-        if (cursor.moveToFirst()) {
-            do {
-                Room room = new Room(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROOM_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_TYPE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_DESCRIPTION)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROOM_MAX_OCCUPANCY)),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_ROOM_PRICE_PER_NIGHT)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROOM_COUNT)),
-                        cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_ROOM_IMAGE))
-                );
-                roomList.add(room);
-            } while (cursor.moveToNext());
+            if (cursor.moveToFirst()) {
+                do {
+                    int roomId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROOM_ID));
+                    String roomType = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_TYPE));
+                    String roomDescription = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_DESCRIPTION));
+                    double pricePerNight = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_ROOM_PRICE_PER_NIGHT));
+
+                    byte[] roomImage = cursor.isNull(cursor.getColumnIndexOrThrow(COLUMN_ROOM_IMAGE))
+                            ? null
+                            : cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_ROOM_IMAGE));
+
+                    if (roomImage != null && roomImage.length > 0) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(roomImage, 0, roomImage.length);
+                    } else {
+                        Log.e("ImageError", "Room image is null or empty.");
+                    }
+
+                    Room room = new Room(roomId, roomType, roomDescription, pricePerNight, roomImage);
+                    roomList.add(room);
+
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
         }
-
-        cursor.close();
-        db.close();
         return roomList;
     }
+
 
 
 }
