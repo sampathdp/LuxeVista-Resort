@@ -7,8 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "LuxeVistaResort.db";
@@ -33,12 +36,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_SERVICE_PRICE = "price";
     private static final String COLUMN_SERVICE_AVAILABILITY = "availability";
     private static final String COLUMN_SERVICE_CATEGORY_ID = "category_id";
-
+    private static final String COLUMN_SERVICE_IMAGE = "image";
     // Service Category Table
     private static final String TABLE_SERVICE_CATEGORIES = "service_categories";
     private static final String COLUMN_CATEGORY_ID = "category_id";
     private static final String COLUMN_CATEGORY_NAME = "category_name";
-
+    private static final String COLUMN_CATEGORY_Desc = "category_description";
     // Rooms Table
     private static final String TABLE_ROOMS = "rooms";
 
@@ -85,18 +88,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Create Service Categories Table
         String CREATE_SERVICE_CATEGORIES_TABLE = "CREATE TABLE " + TABLE_SERVICE_CATEGORIES + " ("
                 + COLUMN_CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + COLUMN_CATEGORY_NAME + " TEXT UNIQUE)";
+                + COLUMN_CATEGORY_NAME + " TEXT UNIQUE,"
+                + COLUMN_CATEGORY_Desc + " TEXT)";
         db.execSQL(CREATE_SERVICE_CATEGORIES_TABLE);
 
         // Create Services Table
-        String CREATE_SERVICES_TABLE = "CREATE TABLE " + TABLE_SERVICES + " ("
-                + COLUMN_SERVICE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + COLUMN_SERVICE_NAME + " TEXT,"
-                + COLUMN_SERVICE_DESC + " TEXT,"
-                + COLUMN_SERVICE_PRICE + " REAL,"
-                + COLUMN_SERVICE_AVAILABILITY + " TEXT,"
-                + COLUMN_SERVICE_CATEGORY_ID + " INTEGER,"
-                + " FOREIGN KEY(" + COLUMN_SERVICE_CATEGORY_ID + ") REFERENCES " + TABLE_SERVICE_CATEGORIES + "(" + COLUMN_CATEGORY_ID + "))";
+        String CREATE_SERVICES_TABLE = "CREATE TABLE " + TABLE_SERVICES + " (" +
+                COLUMN_SERVICE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_SERVICE_NAME + " TEXT NOT NULL, " +
+                COLUMN_SERVICE_DESC + " TEXT, " +
+                COLUMN_SERVICE_PRICE + " REAL, " +
+                COLUMN_SERVICE_AVAILABILITY + " INTEGER DEFAULT 1, " +
+                COLUMN_SERVICE_CATEGORY_ID + " INTEGER, " +
+                COLUMN_SERVICE_IMAGE + " BLOB, " +
+                "FOREIGN KEY(" + COLUMN_SERVICE_CATEGORY_ID + ") REFERENCES service_category(category_id))";
         db.execSQL(CREATE_SERVICES_TABLE);
 
         // Create Rooms Table
@@ -123,8 +128,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " FOREIGN KEY(" + COLUMN_ROOM_ID_FK + ") REFERENCES " + TABLE_ROOMS + "(" + COLUMN_ROOM_ID + "))";
         db.execSQL(CREATE_BOOKINGS_TABLE);
 
-        // Insert default rooms
-        insertDefaultRooms(db);
+        insertRooms(db);
+        insertCategories(db);
+        insertServices(db);
     }
 
     @Override
@@ -167,51 +173,151 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return isAuthenticated;
     }
 
-    private byte[] getImageBytesFromDrawable(int drawableId) {
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
+    private void insertRooms(SQLiteDatabase db) {
+
+        setRoom(db, "Deluxe Suite",
+                "Spacious room with ocean view",
+                4,
+                250.0,
+                10,
+                R.drawable.slider_image_1);
+
+        setRoom(db, "Executive Room",
+                "Luxury room with city view",
+                3,
+                180.0,
+                8,
+                R.drawable.slider_image_2);
+
+        setRoom(db, "Standard Room",
+                "Cozy room for two",
+                2,
+                120.0,
+                15,
+                R.drawable.slider_image_3);
     }
 
-    private void insertDefaultRooms(SQLiteDatabase db) {  // Accept db instance
+    private void setRoom(SQLiteDatabase db, String type, String description,
+                            int maxOccupancy, double pricePerNight,
+                            int roomCount, int imageResourceId) {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_ROOM_TYPE, "Deluxe Room");
-        values.put(COLUMN_ROOM_DESCRIPTION, "A luxurious deluxe room with sea view.");
-        values.put(COLUMN_ROOM_MAX_OCCUPANCY, 2);
-        values.put(COLUMN_ROOM_PRICE_PER_NIGHT, 150.0);
-        values.put(COLUMN_ROOM_COUNT, 10);
-        values.put(COLUMN_ROOM_IMAGE, getImageBytesFromDrawable(R.drawable.slider_image_1));
-        db.insert(TABLE_ROOMS, null, values);  // Use the existing db instance
+
+        values.put(COLUMN_ROOM_TYPE, type);
+        values.put(COLUMN_ROOM_DESCRIPTION, description);
+        values.put(COLUMN_ROOM_MAX_OCCUPANCY, maxOccupancy);
+        values.put(COLUMN_ROOM_PRICE_PER_NIGHT, pricePerNight);
+        values.put(COLUMN_ROOM_COUNT, roomCount);
+
+        byte[] imageBytes = getImageBytesFromDrawable(imageResourceId);
+        if (imageBytes != null) {
+            values.put(COLUMN_ROOM_IMAGE, imageBytes);
+        }
+
+        db.insert(TABLE_ROOMS, null, values);
+    }
+
+    private void insertCategories(SQLiteDatabase db) {
+        setCategory(db, "Spa", "Relaxing spa treatments");
+        setCategory(db, "Fine Dining", "Luxury gourmet experiences");
+        setCategory(db, "Poolside Cabanas", "Exclusive poolside retreats");
+        setCategory(db, "Beach Tours", "Guided scenic tours");
+        setCategory(db, "Water Sports", "Thrilling water adventures");
+    }
+
+    private void setCategory(SQLiteDatabase db, String name, String description) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY_NAME, name);
+        values.put(COLUMN_CATEGORY_Desc, description);
+
+        // Use insertWithOnConflict to avoid duplicate errors
+        db.insertWithOnConflict(TABLE_SERVICE_CATEGORIES, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+    }
+
+    private void insertServices(SQLiteDatabase db) {
+        int spaCategoryId = getCategoryId(db, "Spa");
+        int diningCategoryId = getCategoryId(db, "Fine Dining");
+        int poolCategoryId = getCategoryId(db, "Poolside Cabanas");
+
+        setService(db, spaCategoryId, "Full Body Massage", "60-minute relaxation massage", 100.0, R.drawable.slider_image_1);
+        setService(db, spaCategoryId, "Hot Stone Therapy", "Luxury heated stone therapy", 120.0, R.drawable.slider_image_2);
+
+        setService(db, diningCategoryId, "Romantic Dinner", "Private beachside dining", 200.0, R.drawable.slider_image_2);
+        setService(db, diningCategoryId, "Wine Tasting", "Exclusive wine tasting session", 150.0, R.drawable.slider_image_2);
+
+        setService(db, poolCategoryId, "Cabana Rental", "Private poolside cabana for the day", 80.0, R.drawable.slider_image_1);
     }
 
 
-//    public boolean insertRoom(String type, String description, int maxOccupancy, double pricePerNight, int roomCount, int drawableId) {
-//
-//
-//
-//        SQLiteDatabase  db = this.getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//
-//        values.put(COLUMN_ROOM_ID, 0);
-//        values.put(COLUMN_ROOM_TYPE, type);
-//        values.put(COLUMN_ROOM_DESCRIPTION, description);
-//        values.put(COLUMN_ROOM_MAX_OCCUPANCY, maxOccupancy);
-//        values.put(COLUMN_ROOM_PRICE_PER_NIGHT, pricePerNight);
-//        values.put(COLUMN_ROOM_COUNT, roomCount);
-//        values.put(COLUMN_ROOM_IMAGE, getImageBytesFromDrawable(drawableId));
-//
-//        long result = db.insert(TABLE_ROOMS, null, values);
-//        db.close();
-//
-//        return result != -1;
-//    }
-//    public void insertDefaultRooms() {
-//        insertRoom("Deluxe Suite", "Spacious room with ocean view", 4, 250.0, 10, R.drawable.slider_image_1);
-//        insertRoom("Executive Room", "Luxury room with city view", 3, 180.0, 8, R.drawable.slider_image_1);
-//        insertRoom("Standard Room", "Cozy room for two guests", 2, 120.0, 15, R.drawable.slider_image_1);
-//        insertRoom("Family Suite", "Large suite with two bedrooms", 6, 300.0, 5, R.drawable.slider_image_1);
-//        insertRoom("Penthouse", "Premium suite with VIP services", 4, 500.0, 2, R.drawable.slider_image_1);
-//    }
+    private void setService(SQLiteDatabase db, int categoryId, String name, String description, double price, int imageResourceId) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SERVICE_CATEGORY_ID, categoryId);
+        values.put(COLUMN_SERVICE_NAME, name);
+        values.put(COLUMN_SERVICE_DESC, description);
+        values.put(COLUMN_SERVICE_PRICE, price);
+        values.put(COLUMN_SERVICE_AVAILABILITY, 1);
+
+        byte[] imageBytes = getImageBytesFromDrawable(imageResourceId);
+        if (imageBytes != null) {
+            values.put(COLUMN_SERVICE_IMAGE, imageBytes);
+        }
+
+        db.insert(TABLE_SERVICES, null, values);
+    }
+
+    private int getCategoryId(SQLiteDatabase db, String categoryName) {
+        int categoryId = -1;
+
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_CATEGORY_ID + " FROM " + TABLE_SERVICE_CATEGORIES + " WHERE " + COLUMN_CATEGORY_NAME + "=?",
+                new String[]{categoryName});
+
+        if (cursor != null) {
+            if (cursor.moveToFirst())
+                categoryId = cursor.getInt(0);
+        }
+        return categoryId;
+
+    }
+
+    private byte[] getImageBytesFromDrawable(int drawableId) {
+        try {
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
+            if (bitmap != null) {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                return stream.toByteArray();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Room> getLatestRooms(int limit) {
+        List<Room> roomList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_ROOMS + " ORDER BY " + COLUMN_ROOM_ID + " DESC LIMIT " + limit;
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Room room = new Room(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROOM_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_TYPE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_DESCRIPTION)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROOM_MAX_OCCUPANCY)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_ROOM_PRICE_PER_NIGHT)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROOM_COUNT)),
+                        cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_ROOM_IMAGE))
+                );
+                roomList.add(room);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return roomList;
+    }
+
 
 }

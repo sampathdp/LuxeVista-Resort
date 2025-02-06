@@ -177,6 +177,7 @@
 
         <!-- Room Offers Section -->
         <LinearLayout
+            android:id="@+id/roomOffersContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -191,77 +192,11 @@
                 android:textSize="18sp"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-medium"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Room Offer 1 -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
                 android:layout_marginBottom="16dp"
-                android:backgroundTint="@color/background">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:src="@drawable/slider_image_3"
-                        android:contentDescription="Room Offer 1"
-                        android:layout_gravity="center_vertical"
-                        android:scaleType="centerCrop"
-                        android:background="@drawable/rounded_corners" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginLeft="16dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Deluxe Room"
-                            android:textSize="16sp"
-                            android:textColor="@color/text_primary"
-                            android:fontFamily="sans-serif-medium" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Luxury with a king-size bed and city view."
-                            android:textSize="14sp"
-                            android:textColor="@color/text_secondary"
-                            android:layout_marginTop="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Price: LKR 15,000 per night"
-                            android:textSize="14sp"
-                            android:textColor="@color/accent_coral"
-                            android:layout_marginTop="8dp" />
-
-                        <Button
-                            android:id="@+id/btn_room_book"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Book Now"
-                            android:textColor="@color/text_on_primary"
-                            android:backgroundTint="@color/button_primary"
-                            android:layout_marginTop="12dp"
-                            app:cornerRadius="8dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                />
 
         </LinearLayout>
+
 
         <!-- Weather Widget -->
         <LinearLayout
