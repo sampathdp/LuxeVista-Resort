@@ -1,64 +1,78 @@
 package com.dreampixel.luxevistaresort;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.android.material.card.MaterialCardView;
+
+
 public class ProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    private TextView tvUserName, tvUserEmail;
+    private ImageView ivProfileImage;
+    private MaterialCardView btn_edit_profile;
+    private DatabaseHelper databaseHelper;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+
+        tvUserName = view.findViewById(R.id.tv_user_name);
+        tvUserEmail = view.findViewById(R.id.tv_user_email);
+        ivProfileImage = view.findViewById(R.id.iv_profile_picture);
+        btn_edit_profile=view.findViewById(R.id.btn_edit_profile);
+
+        databaseHelper = new DatabaseHelper(getContext());
+
+        loadUserData();
+
+        btn_edit_profile.setOnClickListener(v->{
+            ViewEditProfile();
+        });
+
+        return view;
+    }
+
+    private void loadUserData() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        String email = sharedPreferences.getString("user_email", "");
+
+        if (!email.isEmpty()) {
+            User user = databaseHelper.getUserByEmail(email);
+            if (user != null) {
+                tvUserName.setText(user.getFullName());
+                tvUserEmail.setText(user.getEmail());
+
+                if (user.getProfileImage() != null) {
+                    Bitmap profileBitmap = BitmapFactory.decodeByteArray(user.getProfileImage(), 0, user.getProfileImage().length);
+                    ivProfileImage.setImageBitmap(profileBitmap);
+
+                } else {
+                    ivProfileImage.setImageResource(R.drawable.ic_profile_placeholder);
+                }
+            }
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+    public void ViewEditProfile() {
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new EditProfileFragment())
+                .addToBackStack(null)
+                .commit();
     }
+
+
 }

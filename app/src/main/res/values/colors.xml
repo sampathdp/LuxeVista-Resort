@@ -6,7 +6,7 @@
     <color name="secondary">#7CD317</color>
 
     <!-- Background & Text colors -->
-    <color name="background">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="text">#000000</color>
     <color name="black">#000000</color>
 

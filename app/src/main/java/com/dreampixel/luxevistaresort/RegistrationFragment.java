@@ -118,7 +118,7 @@ public class RegistrationFragment extends Fragment {
             return;
         }
 
-        User user = new User(fullName, email, contact, dob, gender, password, profileImage);
+        User user = new User(0,fullName, email, contact, dob, gender, password, profileImage);
 
         if (dbHelper.registerUser(user)) {
             Toast.makeText(getActivity(), "Registration Successful!", Toast.LENGTH_SHORT).show();

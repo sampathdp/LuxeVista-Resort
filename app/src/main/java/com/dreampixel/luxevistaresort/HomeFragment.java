@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
 
     private void setupRecyclerView() {
         List<Room> rooms = databaseHelper.getLatestRooms(1);
-        RoomAdapter adapter = new RoomAdapter(rooms);
+        RoomAdapter adapter = new RoomAdapter(getContext(),rooms);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);

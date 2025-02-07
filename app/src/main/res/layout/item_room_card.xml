@@ -16,7 +16,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Room Image Section -->
         <ImageView
             android:id="@+id/iv_room_image"
             android:layout_width="match_parent"
@@ -24,19 +23,17 @@
             android:scaleType="centerCrop"
             android:contentDescription="Room Thumbnail"
             android:src="@drawable/slider_image_1"
-            android:background="@drawable/rounded_background"
+            android:background="@drawable/rounded_corners"
             android:elevation="6dp"
             android:clipToOutline="true"
             android:outlineProvider="background"/>
 
-        <!-- Details Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="16dp">
 
-            <!-- Room Name -->
             <TextView
                 android:id="@+id/tv_room_type"
                 android:layout_width="match_parent"
@@ -49,7 +46,6 @@
                 android:maxLines="1"
                 android:letterSpacing="0.02"/>
 
-            <!-- Room Description -->
             <TextView
                 android:id="@+id/tv_room_description"
                 android:layout_width="match_parent"
@@ -62,7 +58,6 @@
                 android:maxLines="3"
                 android:ellipsize="end"/>
 
-            <!-- Price Section -->
             <TextView
                 android:id="@+id/tv_room_price"
                 android:layout_width="match_parent"
@@ -75,7 +70,6 @@
                 android:gravity="start"
                 android:letterSpacing="0.02"/>
 
-            <!-- Book Now Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_room_book"
                 android:layout_width="wrap_content"

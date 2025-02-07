@@ -1,6 +1,8 @@
 package com.dreampixel.luxevistaresort;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -23,9 +25,13 @@ public class LoginFragment extends Fragment {
 
     private EditText emailField, passwordField;
 
+    private DatabaseHelper  databaseHelper;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        databaseHelper = new DatabaseHelper(getContext());
 
         TextView btn_signUp_Link = view.findViewById(R.id.registerLink);
         Button loginButton = view.findViewById(R.id.loginButton);
@@ -73,6 +79,18 @@ public class LoginFragment extends Fragment {
         }
 
         if (dbHelper.checkUserExists(email, password)) {
+
+            User user = databaseHelper.getUserByEmail(email);
+            int user_ID = 0;
+            if (user != null)
+                user_ID=user.getUser_id();
+
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("user_email", email);
+            editor.putInt("user_ID", user_ID);
+            editor.apply();
+
             Intent intent = new Intent(this.getActivity(), HomeActivity.class);
             startActivity(intent);
         } else {

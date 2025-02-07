@@ -315,7 +315,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return null;
     }
-
     public List<Room> getLatestRooms(int query) {
         List<Room> roomList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -347,4 +346,75 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return roomList;
     }
+
+    public User getUserByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = null;
+
+        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_ID, COLUMN_FULL_NAME, COLUMN_EMAIL, COLUMN_PROFILE_IMAGE},
+                COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int userId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
+            String fullName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FULL_NAME));
+            String userEmail = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL));
+            byte[] profileImage = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_PROFILE_IMAGE));
+
+            user = new User(userId, fullName, userEmail, null, null, null, null,profileImage); // Assuming User class has user_id parameter
+            cursor.close();
+        }
+
+        db.close();
+        return user;
+    }
+
+
+    public boolean updateUserDetails(String email, String fullName, String telephone, String password, byte[] profileImage) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FULL_NAME, fullName);
+        values.put(COLUMN_CONTACT, telephone);
+        values.put(COLUMN_PASSWORD, password);
+        values.put(COLUMN_PROFILE_IMAGE, profileImage);
+
+        int rowsAffected = db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
+        db.close();
+
+        return rowsAffected > 0;
+    }
+
+    public Room getRoomDetails(int roomId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("Rooms", null, "room_id = ?", new String[]{String.valueOf(roomId)}, null, null, null);
+
+
+
+        if (cursor != null && cursor.moveToFirst()) {
+            String roomType = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_TYPE));
+            String roomDesc = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_DESCRIPTION));
+            double roomPricePerNight = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_ROOM_PRICE_PER_NIGHT));
+            byte[] image = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_ROOM_IMAGE));
+            cursor.close();
+            return new Room(roomId,roomType,roomDesc, roomPricePerNight, image);
+        }
+        return null;
+    }
+
+    public boolean insertRoomBooking(int userID, int roomID, String checkInDate, String checkOutDate, String status, double totalPrice) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_USER_ID, userID);
+        values.put(COLUMN_ROOM_ID_FK, roomID);
+        values.put(COLUMN_CHECKIN_DATE, checkInDate);
+        values.put(COLUMN_CHECKOUT_DATE, checkOutDate);
+        values.put(COLUMN_BOOKING_STATUS, status);
+        values.put(COLUMN_TOTAL_PRICE, totalPrice);
+
+        long result = db.insert(TABLE_BOOKINGS, null, values);
+        db.close();
+
+        return result != -1; // Returns true if insertion was successful
+    }
+
 }

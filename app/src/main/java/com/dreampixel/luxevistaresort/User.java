@@ -1,6 +1,8 @@
 package com.dreampixel.luxevistaresort;
 
 public class User {
+
+    private int user_id;
     private String fullName;
     private String email;
     private String contact;
@@ -9,14 +11,23 @@ public class User {
     private String password;
     private byte[] profileImage;
 
-    public User(String fullName, String email, String contact, String dob, String gender, String password, byte[] imageBytes) {
+    public User(int user_id, String fullName, String email, String contact, String dob, String gender, String password, byte[] profileImage) {
+        this.user_id = user_id;
         this.fullName = fullName;
         this.email = email;
         this.contact = contact;
         this.dob = dob;
         this.gender = gender;
         this.password = password;
-        this.profileImage = imageBytes;
+        this.profileImage = profileImage;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public String getFullName() {

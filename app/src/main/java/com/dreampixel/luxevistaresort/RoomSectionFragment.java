@@ -32,9 +32,10 @@ public class RoomSectionFragment extends Fragment {
     }
     private void setupRecyclerView() {
         List<Room> rooms = databaseHelper.getLatestRooms(0);
-        RoomAdapter adapter = new RoomAdapter(rooms);
+        RoomAdapter adapter = new RoomAdapter(getContext(), rooms);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
+
 }

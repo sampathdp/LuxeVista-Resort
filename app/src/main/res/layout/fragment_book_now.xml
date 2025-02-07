@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/white"
     tools:context=".BookNowFragment">
 
     <androidx.cardview.widget.CardView
@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/background"
+        android:backgroundTint="@color/white"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -109,6 +109,16 @@
                         android:textColor="@color/text"
                         android:textSize="18sp"
                         android:layout_marginTop="8dp" />
+
+                    <!-- Price per Night -->
+                    <TextView
+                        android:id="@+id/pricePerNight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Price per Night: $100"
+                        android:textColor="@color/text"
+                        android:textSize="16sp"
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -150,7 +160,7 @@
                             android:textColor="@color/text"
                             android:textAlignment="center"
                             android:padding="12dp"
-                            android:background="@drawable/rounded_outline_button" />
+                            android:background="@drawable/rounded_button_outline" />
 
                         <TextView
                             android:id="@+id/checkOutDate"
@@ -161,9 +171,44 @@
                             android:textColor="@color/text"
                             android:textAlignment="center"
                             android:padding="12dp"
-                            android:background="@drawable/rounded_outline_button"
+                            android:background="@drawable/rounded_button_outline"
                             android:layout_marginStart="16dp" />
                     </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Total Price Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/totalPriceCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:layout_constraintTop_toBottomOf="@id/datePickerCard">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Price"
+                        android:textColor="@color/text"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/totalPriceText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$200"
+                        android:textColor="@color/primary"
+                        android:textSize="20sp"
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -172,15 +217,14 @@
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:text="Book Now"
-                android:textColor="@color/background"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:backgroundTint="@color/secondary"
                 app:cornerRadius="12dp"
                 android:layout_marginTop="24dp"
-                app:layout_constraintTop_toBottomOf="@id/datePickerCard"
+                app:layout_constraintTop_toBottomOf="@id/totalPriceCard"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

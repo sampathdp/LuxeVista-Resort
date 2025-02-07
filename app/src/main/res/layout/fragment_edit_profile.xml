@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/white">
+
+
+    <ImageView
+        android:id="@+id/iv_profile_picture"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_profile_placeholder"
+        android:contentDescription="Profile Picture"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/circle_background"
+        android:elevation="4dp"
+        android:scaleType="fitCenter"
+        android:padding="24dp"
+        android:clipToOutline="true"/>
+
+    <EditText
+        android:id="@+id/et_full_name"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:hint="Full Name"
+        android:inputType="textPersonName"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:background="@drawable/input_field_background" />
+
+    <EditText
+        android:id="@+id/et_telephone"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:hint="Telephone"
+        android:inputType="phone"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:background="@drawable/input_field_background"
+        android:layout_marginTop="12dp" />
+
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:background="@drawable/input_field_background"
+        android:layout_marginTop="12dp" />
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Save Changes"
+        android:textSize="16sp"
+        android:backgroundTint="@color/text"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rounded_button_outline"/>
+</LinearLayout>

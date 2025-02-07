@@ -1,6 +1,7 @@
 package com.dreampixel.luxevistaresort;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -9,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -19,8 +20,10 @@ import java.util.List;
 
 public class RoomAdapter  extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     private List<Room> rooms;
+    private Context context;
 
-    public RoomAdapter(List<Room> rooms) {
+    public RoomAdapter(Context context, List<Room> rooms) {
+        this.context = context;
         this.rooms = rooms;
     }
 
@@ -36,16 +39,27 @@ public class RoomAdapter  extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Room room = rooms.get(position);
 
-        // Set text values
         holder.roomType.setText(room.getType());
         holder.roomDescription.setText(room.getDescription());
-        holder.roomPrice.setText(String.format("$%.2f per night", room.getPrice()));
+        holder.roomPrice.setText(String.format("LKR %.2f per night", room.getPrice()));
 
-        // Convert byte array to Bitmap
         if (room.getImage() != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(room.getImage(), 0, room.getImage().length);
-            holder.roomImage.setImageBitmap(bitmap);
+            holder.roomImage.setImageBitmap(BitmapFactory.decodeByteArray(room.getImage(), 0, room.getImage().length));
         }
+
+
+        holder.bookButton.setOnClickListener(v -> {
+
+            SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("room_ID", room.getId());
+            editor.apply();
+
+            ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new BookNowFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
     }
 
     @Override
