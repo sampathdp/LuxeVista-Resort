@@ -8,27 +8,35 @@
     android:background="@color/background"
     tools:context=".BookNowFragment">
 
-    <!-- Top Header -->
-    <TextView
-        android:id="@+id/topHeader"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/bottom_nav_icon_selected"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="16dp"
-        android:text="Booking Details"
-        android:textColor="@color/text_on_primary"
-        android:textSize="20sp"
-        android:textStyle="bold"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/headerCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/background"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/headerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:gravity="center"
+            android:text="Booking Details"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text" />
+    </androidx.cardview.widget.CardView>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/topHeader"
+        app:layout_constraintTop_toBottomOf="@id/headerCard"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +44,6 @@
             android:layout_height="wrap_content"
             android:padding="24dp">
 
-            <!-- Header Image -->
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/headerImage"
                 android:layout_width="match_parent"
@@ -46,26 +53,24 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/RoundedCorners" />
 
-            <!-- Title -->
             <TextView
                 android:id="@+id/bookNowTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Book Your Stay"
                 android:textSize="28sp"
-                android:textColor="@color/text_primary"
+                android:textColor="@color/text"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@id/headerImage"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <!-- Room Description -->
             <TextView
                 android:id="@+id/roomDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Enjoy a luxurious stay in our deluxe room featuring modern amenities, a king-sized bed, and stunning views."
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text"
                 android:textSize="16sp"
                 android:lineSpacingExtra="4dp"
                 android:layout_marginTop="8dp"
@@ -73,7 +78,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Room Type Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/roomTypeCard"
                 android:layout_width="match_parent"
@@ -93,7 +97,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Room Type"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/text"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -102,13 +106,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Deluxe Room"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/text"
                         android:textSize="18sp"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Date Picker Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/datePickerCard"
                 android:layout_width="match_parent"
@@ -128,7 +131,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Select Your Dates"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/text"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -144,7 +147,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Check-In"
-                            android:textColor="@color/button_primary"
+                            android:textColor="@color/text"
                             android:textAlignment="center"
                             android:padding="12dp"
                             android:background="@drawable/rounded_outline_button" />
@@ -155,7 +158,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Check-Out"
-                            android:textColor="@color/button_primary"
+                            android:textColor="@color/text"
                             android:textAlignment="center"
                             android:padding="12dp"
                             android:background="@drawable/rounded_outline_button"
@@ -164,18 +167,21 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Book Now Button -->
             <Button
                 android:id="@+id/bookNowButton"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:text="Book Now"
-                android:textColor="@color/text_on_primary"
+                android:textColor="@color/background"
                 android:textSize="16sp"
-                android:backgroundTint="@color/button_primary"
+                android:backgroundTint="@color/secondary"
                 app:cornerRadius="12dp"
                 android:layout_marginTop="24dp"
-                app:layout_constraintTop_toBottomOf="@id/datePickerCard" />
+                app:layout_constraintTop_toBottomOf="@id/datePickerCard"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

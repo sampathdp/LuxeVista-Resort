@@ -1,35 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Primary app colors -->
-    <color name="primary">#1E88E5</color>         <!-- Ocean blue -->
-    <color name="primary_variant">#1565C0</color> <!-- Deeper ocean blue -->
-    <color name="secondary">#26A69A</color>       <!-- Seafoam green -->
+    <color name="primary">#1E88E5</color>
+    <color name="primary_variant">#1565C0</color>
+    <color name="secondary">#7CD317</color>
 
-    <!-- Background colors -->
-    <color name="background">#FFFFFF</color>      <!-- White -->
-    <color name="surface">#FFFFFF</color>         <!-- White -->
+    <!-- Background & Text colors -->
+    <color name="background">#FFFFFF</color>
+    <color name="text">#000000</color>
+    <color name="black">#000000</color>
 
-    <!-- Text colors -->
-    <color name="text_primary">#37474F</color>    <!-- Dark blue-grey -->
-    <color name="text_secondary">#78909C</color>  <!-- Light blue-grey -->
-    <color name="text_on_primary">#FFFFFF</color> <!-- White -->
-    <color name="text_error">#D32F2F</color>      <!-- Error red -->
 
-    <!-- Button colors -->
-    <color name="button_primary">#1E88E5</color>  <!-- Ocean blue -->
-    <color name="button_secondary">#26A69A</color><!-- Seafoam green -->
-
-    <!-- Additional colors -->
-    <color name="gray">#B0BEC5</color>           <!-- Blue-tinted gray -->
-    <color name="black">#263238</color>          <!-- Dark blue-black -->
-    <color name="error">#D32F2F</color>          <!-- Error red -->
-
-    <!-- Accent colors -->
-    <color name="accent_sand">#FFE0B2</color>    <!-- Light sand color -->
-    <color name="accent_coral">#FF8A65</color>   <!-- Coral accent -->
-
-    <color name="bottom_nav_icon_color">#000000</color>
-    <color name="bottom_nav_text_color">#000000</color>
-    <color name="bottom_nav_icon_selected">#FF6200EE</color>
-    <color name="bottom_nav_text_selected">#FF6200EE</color>
 </resources>

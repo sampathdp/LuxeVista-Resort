@@ -17,64 +17,54 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
+public class RoomAdapter  extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
+    private List<Room> rooms;
 
-    private Context context;
-    private List<Room> roomList;
-
-    public RoomAdapter(Context context, List<Room> roomList) {
-        this.context = context;
-        this.roomList = new ArrayList<>(roomList);;
-    }
-
-    public void updateRoomList(List<Room> newRoomList) {
-        this.roomList.clear();
-        this.roomList.addAll(newRoomList);
-        notifyDataSetChanged();
+    public RoomAdapter(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_room_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_room_card, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Room room = roomList.get(position);
-        holder.tvRoomType.setText(room.getType());
-        holder.tvRoomDescription.setText(room.getDescription());
-        holder.tvRoomPrice.setText("Price: $" + room.getPrice());
+        Room room = rooms.get(position);
 
-        // Convert BLOB to Bitmap
-        byte[] imageBytes = room.getImage();
-        if (imageBytes != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-            holder.ivRoomImage.setImageBitmap(bitmap);
+        // Set text values
+        holder.roomType.setText(room.getType());
+        holder.roomDescription.setText(room.getDescription());
+        holder.roomPrice.setText(String.format("$%.2f per night", room.getPrice()));
+
+        // Convert byte array to Bitmap
+        if (room.getImage() != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(room.getImage(), 0, room.getImage().length);
+            holder.roomImage.setImageBitmap(bitmap);
         }
-
-        holder.btnRoomBook.setOnClickListener(v ->
-                Toast.makeText(context, "Booking " + room.getType(), Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public int getItemCount() {
-        return roomList.size();
+        return rooms.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoomType, tvRoomDescription, tvRoomPrice;
-        ImageView ivRoomImage;
-        Button btnRoomBook;
+        ImageView roomImage;
+        TextView roomType, roomDescription, roomPrice;
+        Button bookButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvRoomType = itemView.findViewById(R.id.tv_room_type);
-            tvRoomDescription = itemView.findViewById(R.id.tv_room_description);
-            tvRoomPrice = itemView.findViewById(R.id.tv_room_price);
-            ivRoomImage = itemView.findViewById(R.id.iv_room_image);
-            btnRoomBook = itemView.findViewById(R.id.btn_room_book);
+            roomImage = itemView.findViewById(R.id.iv_room_image);
+            roomType = itemView.findViewById(R.id.tv_room_type);
+            roomDescription = itemView.findViewById(R.id.tv_room_description);
+            roomPrice = itemView.findViewById(R.id.tv_room_price);
+            bookButton = itemView.findViewById(R.id.btn_room_book);
         }
     }
 }

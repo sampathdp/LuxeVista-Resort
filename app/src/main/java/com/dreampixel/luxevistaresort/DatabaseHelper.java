@@ -169,26 +169,69 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     private void insertRooms(SQLiteDatabase db) {
 
-        setRoom(db, "Deluxe Suite",
-                "Spacious room with ocean view",
+        setRoom(db, "Oceanfront Suite",
+                "Luxurious room with breathtaking ocean views",
+                5,
+                12,
+                R.drawable.slider_image_1);
+
+        setRoom(db, "City View Room",
+                "Modern room with stunning city skyline views",
+                4,
+                10,
+                R.drawable.slider_image_2);
+
+        setRoom(db, "Garden View Room",
+                "Peaceful room with a beautiful garden view",
+                3,
+                18,
+                R.drawable.slider_image_3);
+
+        setRoom(db, "Penthouse Suite",
+                "Exclusive top-floor suite with panoramic views",
+                6,
+                5,
+                R.drawable.slider_image_1);
+
+        setRoom(db, "Mountain View Room",
+                "Cozy room with a stunning mountain view",
+                4,
+                20,
+                R.drawable.slider_image_1);
+
+        setRoom(db, "Royal Suite",
+                "Elegant and spacious suite with a private balcony",
+                5,
+                8,
+                R.drawable.slider_image_1);
+
+        setRoom(db, "Executive Deluxe Room",
+                "Luxury room with top-tier amenities and views",
                 4,
                 10,
                 R.drawable.slider_image_1);
 
-        setRoom(db, "Executive Room",
-                "Luxury room with city view",
+        setRoom(db, "Poolside Room",
+                "Relaxing room with a view of the pool area",
                 3,
-                8,
-                R.drawable.slider_image_2);
+                25,
+                R.drawable.slider_image_1);
 
-        setRoom(db, "Standard Room",
-                "Cozy room for two",
+        setRoom(db, "Family Suite",
+                "Large suite perfect for families, with separate living areas",
+                6,
+                6,
+                R.drawable.slider_image_1);
+
+        setRoom(db, "Budget Room",
+                "Affordable room with all the essentials for a comfortable stay",
                 2,
-                15,
-                R.drawable.slider_image_3);
+                30,
+                R.drawable.slider_image_1);
+
     }
     private void setRoom(SQLiteDatabase db, String type, String description, double pricePerNight,
-                            int roomCount, int imageResourceId) {
+                         int roomCount, int imageResourceId) {
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_ROOM_TYPE, type);
@@ -261,15 +304,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     private byte[] getImageBytesFromDrawable(int drawableId) {
         try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true; // Load only the image size, not the bitmap
-            BitmapFactory.decodeResource(context.getResources(), drawableId, options);
-
-            // Determine the best sample size (power of 2) to downscale the image
-            options.inSampleSize = calculateInSampleSize(options, 800, 800);
-            options.inJustDecodeBounds = false; // Load the full bitmap with sampling
-
-            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId, options);
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
             if (bitmap != null) {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream); // 75% quality for optimal balance
@@ -280,69 +315,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return null;
     }
-    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        int height = options.outHeight;
-        int width = options.outWidth;
-        int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
-            int halfHeight = height / 2;
-            int halfWidth = width / 2;
-
-            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-        return inSampleSize;
-    }
-
-    List<Room> getLatestRooms() {
+    public List<Room> getLatestRooms(int query) {
         List<Room> roomList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
 
         try {
-            cursor = db.rawQuery("SELECT * FROM " + TABLE_ROOMS + " ORDER BY " + COLUMN_ROOM_ID + " DESC LIMIT 3", null);
-            if (cursor == null) {
-                Log.e("DatabaseError", "Cursor is null. Query failed.");
-                return roomList;
-            }
+            if(query==0)
+                cursor = db.rawQuery("SELECT * FROM " + TABLE_ROOMS, null);
+            else if(query==1)
+                cursor = db.rawQuery("SELECT * FROM " + TABLE_ROOMS + " ORDER BY " + COLUMN_ROOM_ID + " DESC LIMIT 3", null);
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 do {
                     int roomId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ROOM_ID));
                     String roomType = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_TYPE));
                     String roomDescription = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_DESCRIPTION));
                     double pricePerNight = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_ROOM_PRICE_PER_NIGHT));
-
-                    byte[] roomImage = cursor.isNull(cursor.getColumnIndexOrThrow(COLUMN_ROOM_IMAGE))
-                            ? null
-                            : cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_ROOM_IMAGE));
-
-                    if (roomImage != null && roomImage.length > 0) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(roomImage, 0, roomImage.length);
-                    } else {
-                        Log.e("ImageError", "Room image is null or empty.");
-                    }
+                    byte[] roomImage = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_ROOM_IMAGE));
 
                     Room room = new Room(roomId, roomType, roomDescription, pricePerNight, roomImage);
                     roomList.add(room);
-
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-            if (db != null && db.isOpen()) {
-                db.close();
-            }
+            if (cursor != null) cursor.close();
+            if (db != null && db.isOpen()) db.close();
         }
         return roomList;
     }
-
-
-
 }

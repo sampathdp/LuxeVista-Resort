@@ -8,7 +8,6 @@
     android:background="@color/background"
     tools:context=".MainActivity">
 
-    <!-- Header Section -->
     <androidx.cardview.widget.CardView
         android:id="@+id/headerCard"
         android:layout_width="0dp"
@@ -30,10 +29,9 @@
             android:text="Explore the Gallery"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary" />
+            android:textColor="@color/text" />
     </androidx.cardview.widget.CardView>
 
-    <!-- Carousel -->
     <androidx.cardview.widget.CardView
         android:id="@+id/carouselCard"
         android:layout_width="0dp"
@@ -58,7 +56,6 @@
             android:overScrollMode="never" />
     </androidx.cardview.widget.CardView>
 
-    <!-- Gallery Section Title -->
     <TextView
         android:id="@+id/titleGallery"
         android:layout_width="wrap_content"
@@ -67,12 +64,11 @@
         android:layout_marginTop="16dp"
         android:text="Gallery"
         android:textSize="22sp"
-        android:textColor="@color/text_primary"
+        android:textColor="@color/text"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/carouselCard"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Gallery Grid -->
     <androidx.cardview.widget.CardView
         android:id="@+id/galleryCard"
         android:layout_width="0dp"
