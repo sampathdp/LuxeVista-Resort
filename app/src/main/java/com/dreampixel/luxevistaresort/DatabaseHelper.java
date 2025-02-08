@@ -48,7 +48,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ROOM_ID = "room_id";
     private static final String COLUMN_ROOM_TYPE = "type";
     private static final String COLUMN_ROOM_DESCRIPTION = "description";
-    private static final String COLUMN_ROOM_MAX_OCCUPANCY = "max_occupancy";
     private static final String COLUMN_ROOM_PRICE_PER_NIGHT = "price_per_night";
     private static final String COLUMN_ROOM_COUNT = "room_count";
     private static final String COLUMN_ROOM_IMAGE = "room_image";
@@ -63,6 +62,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_BOOKING_STATUS = "status";
     private static final String COLUMN_TOTAL_PRICE = "total_price";
 
+    //Service Reservation Table
+    public static final String TABLE_SERVICE_RESERVATION = "serviceReservation";
+    public static final String COLUMN_RESERVATION_ID = "reservationID";
+    public static final String COLUMN_SERVICE_ID_FK = "serviceID";
+    public static final String COLUMN_USER_ID_FK = "userID";
+    public static final String COLUMN_RESERVATION_DATETIME = "reservationDateTime";
 
     private Context context;
 
@@ -125,6 +130,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " FOREIGN KEY(" + COLUMN_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_ID + "),"
                 + " FOREIGN KEY(" + COLUMN_ROOM_ID_FK + ") REFERENCES " + TABLE_ROOMS + "(" + COLUMN_ROOM_ID + "))";
         db.execSQL(CREATE_BOOKINGS_TABLE);
+
+        //Create Service Reservation Table
+        String CREATE_SERVICE_RESERVATION_TABLE = "CREATE TABLE " + TABLE_SERVICE_RESERVATION + " (" +
+                COLUMN_RESERVATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_SERVICE_ID_FK + " INTEGER, " +
+                COLUMN_USER_ID_FK + " INTEGER, " +
+                COLUMN_RESERVATION_DATETIME + " TEXT NOT NULL, " +
+                "FOREIGN KEY(" + COLUMN_SERVICE_ID_FK + ") REFERENCES " + TABLE_SERVICES + "(" + COLUMN_SERVICE_ID + "), " +
+                "FOREIGN KEY(" + COLUMN_USER_ID_FK + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_ID + "))";
+        db.execSQL(CREATE_SERVICE_RESERVATION_TABLE);
 
         insertRooms(db);
         insertCategories(db);
@@ -302,6 +317,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return categoryId;
 
     }
+
     private byte[] getImageBytesFromDrawable(int drawableId) {
         try {
             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
@@ -315,6 +331,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return null;
     }
+
     public List<Room> getLatestRooms(int query) {
         List<Room> roomList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -368,7 +385,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return user;
     }
 
-
     public boolean updateUserDetails(String email, String fullName, String telephone, String password, byte[] profileImage) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -415,6 +431,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return result != -1; // Returns true if insertion was successful
+    }
+
+    public List<Service> getAllServices() {
+        List<Service> serviceList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SERVICES, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_ID));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_NAME));
+                String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_DESC));
+                double price = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_PRICE));
+                int availability = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_AVAILABILITY));
+                int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_CATEGORY_ID));
+                byte[] image = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_IMAGE));
+
+                Service service = new Service(id, name, description, price, availability, categoryId, image);
+                serviceList.add(service);
+
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return serviceList;
     }
 
 }

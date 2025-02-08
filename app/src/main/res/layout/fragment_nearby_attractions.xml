@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="#F5F5F5">
 
     <androidx.cardview.widget.CardView
@@ -19,7 +20,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:gravity="center"
-            android:text="Explore the Gallery"
+            android:text="Nearby Attractions to Explore"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#333333" />
@@ -33,5 +34,6 @@
         android:clipToPadding="false"
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_nearby_attraction"/>
 </RelativeLayout>

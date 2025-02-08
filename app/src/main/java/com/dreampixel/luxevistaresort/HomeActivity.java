@@ -1,6 +1,5 @@
 package com.dreampixel.luxevistaresort;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -30,9 +29,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 if (item.getItemId() == R.id.nav_home) {
                     selectedFragment = new HomeFragment();
-                } else if (item.getItemId() == R.id.nav_offers) {
-                    selectedFragment = new OffersFragment();
-                } else if (item.getItemId() == R.id.nav_explore) {
+                }else if (item.getItemId() == R.id.nav_explore) {
                     selectedFragment = new ExploreFragment();
                 } else if (item.getItemId() == R.id.nav_profile) {
                     selectedFragment = new ProfileFragment();

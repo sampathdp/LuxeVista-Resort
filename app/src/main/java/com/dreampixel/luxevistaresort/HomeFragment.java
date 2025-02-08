@@ -34,12 +34,12 @@ public class HomeFragment extends Fragment {
         bookRoom.setOnClickListener(v->{
             ViewRooms();
         });
-//        reserveServices.setOnClickListener(v->{
-//
-//        });
-//        nearbyAttractionCard.setOnClickListener(v->{
-//
-//        });
+        reserveServices.setOnClickListener(v->{
+            ViewServices();
+        });
+        nearbyAttractionCard.setOnClickListener(v->{
+            ViewNerabyLocations();
+        });
 
         recyclerView = view.findViewById(R.id.recyclerViewRooms);
         databaseHelper = new DatabaseHelper(getContext());
@@ -51,6 +51,8 @@ public class HomeFragment extends Fragment {
 
     }
 
+
+
     private void setupRecyclerView() {
         List<Room> rooms = databaseHelper.getLatestRooms(1);
         RoomAdapter adapter = new RoomAdapter(getContext(),rooms);
@@ -58,11 +60,9 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
-
-    // Navigate to BookNowFragment
-    void ViewBookNow(){
+    void ViewServices(){
         getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new BookNowFragment())
+                    .replace(R.id.fragment_container, new ServiceFragment())
                     .addToBackStack(null)
                     .commit();
     }
@@ -72,7 +72,12 @@ public class HomeFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
     }
-
+    private void ViewNerabyLocations() {
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new NearbyAttractionsFragment())
+                .addToBackStack(null)
+                .commit();
+    }
 
     void ViewSlider(View view){
         ViewPager2 featuredCarousel = view.findViewById(R.id.featuredCarousel);
