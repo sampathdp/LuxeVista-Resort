@@ -458,4 +458,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return serviceList;
     }
 
+    public boolean reserveService(int serviceId, int userId, String reservationDateTime) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SERVICE_ID_FK, serviceId);
+        values.put(COLUMN_USER_ID_FK, userId);
+        values.put(COLUMN_RESERVATION_DATETIME, reservationDateTime);
+
+        long result = db.insert(TABLE_SERVICE_RESERVATION, null, values);
+        return result != -1;
+    }
+
+
 }
