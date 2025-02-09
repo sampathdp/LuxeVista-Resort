@@ -77,8 +77,8 @@
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             app:menu="@menu/bottom_nav_menu"
-            app:itemIconTint="@color/text"
-            app:itemTextColor="@color/text"
+            app:itemIconTint="@color/black"
+            app:itemTextColor="@color/black"
             app:labelVisibilityMode="labeled" />
     </androidx.cardview.widget.CardView>
 

@@ -7,8 +7,7 @@
 
     <!-- Background & Text colors -->
     <color name="white">#FFFFFF</color>
-    <color name="text">#000000</color>
     <color name="black">#000000</color>
-
+    <color name="red">#B40101</color>
 
 </resources>

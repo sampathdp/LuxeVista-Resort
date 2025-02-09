@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +27,7 @@ public class ServiceAdapter  extends RecyclerView.Adapter<ServiceAdapter.Service
     private List<Service> serviceList;
     private Context context;
     private DatabaseHelper dbHelper;
-    private int userId; // Get the logged-in user ID
+    private int userId;
 
     public ServiceAdapter(List<Service> serviceList, Context context, int userId) {
         this.serviceList = serviceList;
@@ -52,8 +53,10 @@ public class ServiceAdapter  extends RecyclerView.Adapter<ServiceAdapter.Service
 
         if (service.getAvailability() == 1) {
             holder.serviceAvailability.setText("Available");
+            holder.serviceAvailability.setBackgroundColor(ContextCompat.getColor(context, R.color.secondary));
         } else {
             holder.serviceAvailability.setText("Unavailable");
+            holder.serviceAvailability.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
         }
 
         if (service.getImage() != null) {
@@ -65,10 +68,12 @@ public class ServiceAdapter  extends RecyclerView.Adapter<ServiceAdapter.Service
 
         holder.btnReserve.setOnClickListener(v -> {
 
-            int[] validHours = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23};
+            int[] validHours = {10, 11, 12, 13, 14, 15, 16, 17, 18};
             int randomHour = validHours[new Random().nextInt(validHours.length)];
-
             Calendar calendar = Calendar.getInstance();
+            int randomDayOffset = new Random().nextInt(7);
+            calendar.add(Calendar.DAY_OF_YEAR, randomDayOffset);
+
             calendar.set(Calendar.HOUR_OF_DAY, randomHour);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
@@ -76,14 +81,17 @@ public class ServiceAdapter  extends RecyclerView.Adapter<ServiceAdapter.Service
             String reservationDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(calendar.getTime());
 
             boolean isReserved = dbHelper.reserveService(service.getId(), userId, reservationDateTime);
-            if (isReserved) {
-                Toast.makeText(context, "Service Reserved at " + randomHour + ":00!", Toast.LENGTH_SHORT).show();
+            if (service.getAvailability() != 1) {
+                Toast.makeText(context, "Service Not Available", Toast.LENGTH_SHORT).show();
+            }
+            else if (isReserved) {
+                Toast.makeText(context, "Service Reserved for " + new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault()).format(calendar.getTime()) + " at " + randomHour + ":00!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Failed to Reserve Service", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
 
     @Override
     public int getItemCount() {

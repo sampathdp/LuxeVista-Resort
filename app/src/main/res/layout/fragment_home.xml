@@ -188,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:text="Our Room Offers"
                 android:textSize="18sp"
-                android:textColor="@color/text"
+                android:textColor="@color/black"
                 android:fontFamily="sans-serif-medium"
                 android:layout_marginBottom="16dp"
                 />

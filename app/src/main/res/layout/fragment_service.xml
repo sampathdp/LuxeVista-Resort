@@ -165,7 +165,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="In-House Services"
-            android:textColor="@color/text"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
             android:paddingBottom="16dp" />

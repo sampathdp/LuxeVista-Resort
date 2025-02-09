@@ -22,7 +22,7 @@ public class ProfileFragment extends Fragment {
 
     private TextView tvUserName, tvUserEmail;
     private ImageView ivProfileImage;
-    private MaterialCardView btn_edit_profile;
+    private MaterialCardView btn_edit_profile,btn_view_booking_history;
     private DatabaseHelper databaseHelper;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,6 +34,7 @@ public class ProfileFragment extends Fragment {
         tvUserEmail = view.findViewById(R.id.tv_user_email);
         ivProfileImage = view.findViewById(R.id.iv_profile_picture);
         btn_edit_profile=view.findViewById(R.id.btn_edit_profile);
+        btn_view_booking_history=view.findViewById(R.id.btn_booking_history);
 
         databaseHelper = new DatabaseHelper(getContext());
 
@@ -41,6 +42,9 @@ public class ProfileFragment extends Fragment {
 
         btn_edit_profile.setOnClickListener(v->{
             ViewEditProfile();
+        });
+        btn_view_booking_history.setOnClickListener(v->{
+            ViewBookingHistory();
         });
 
         return view;
@@ -73,6 +77,11 @@ public class ProfileFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
     }
-
+    public void ViewBookingHistory() {
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new BookingHistoryFragment())
+                .addToBackStack(null)
+                .commit();
+    }
 
 }

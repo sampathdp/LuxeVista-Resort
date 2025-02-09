@@ -21,7 +21,7 @@ public class NearbyAttractionsFragment extends Fragment {
     private List<Place> places;
 
     public NearbyAttractionsFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
