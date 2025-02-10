@@ -82,7 +82,7 @@
                     app:queryBackground="@android:color/transparent"/>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Filter Section with Chips and Sort Option -->
+            <!-- Filter Section with Dropdowns -->
             <LinearLayout
                 android:id="@+id/filterSection"
                 android:layout_width="0dp"
@@ -93,43 +93,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/filterChipGroup"
+                <!-- Room Type Filter Dropdown -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/roomTypeCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:singleSelection="true">
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp">
 
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="All Rooms"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"/>
+                    <Spinner
+                        android:id="@+id/roomTypeSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:paddingHorizontal="12dp"
+                        android:background="@null"
+                        android:entries="@array/room_type_options"/>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Deluxe"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Superior"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Suite"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"/>
-                </com.google.android.material.chip.ChipGroup>
-
+                <!-- Price Sort Dropdown -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/sortCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     app:cardCornerRadius="8dp"
                     app:cardElevation="4dp">
 

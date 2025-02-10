@@ -122,6 +122,10 @@ public class RegistrationFragment extends Fragment {
 
         if (dbHelper.registerUser(user)) {
             Toast.makeText(getActivity(), "Registration Successful!", Toast.LENGTH_SHORT).show();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.fragmentContainer_Main, new LoginFragment());
+            transaction.commit();
         } else {
             Toast.makeText(getActivity(), "Email already exists!", Toast.LENGTH_SHORT).show();
         }

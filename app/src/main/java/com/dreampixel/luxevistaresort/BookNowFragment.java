@@ -145,6 +145,10 @@ public class BookNowFragment extends Fragment {
 
         if (success) {
             Toast.makeText(getContext(), "Booking Confirmed!", Toast.LENGTH_SHORT).show();
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .addToBackStack(null)
+                    .commit();
         } else {
             Toast.makeText(getContext(), "Booking Failed!", Toast.LENGTH_SHORT).show();
         }

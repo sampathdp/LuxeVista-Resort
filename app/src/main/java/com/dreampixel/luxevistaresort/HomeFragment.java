@@ -1,5 +1,7 @@
 package com.dreampixel.luxevistaresort;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,16 +13,23 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private TextView serviceTitle, serviceDateTime, countdownText;
     private DatabaseHelper databaseHelper;
+    private int userId;
 
     @Nullable
     @Override
@@ -30,6 +39,10 @@ public class HomeFragment extends Fragment {
         MaterialCardView bookRoom = view.findViewById(R.id.card_book_room);
         MaterialCardView reserveServices = view.findViewById(R.id.card_reserve_service);
         MaterialCardView nearbyAttractionCard = view.findViewById(R.id.card_nearby_attractions);
+
+        serviceTitle = view.findViewById(R.id.serviceTitle);
+        serviceDateTime = view.findViewById(R.id.serviceDateTime);
+        countdownText = view.findViewById(R.id.countdownText);
 
         bookRoom.setOnClickListener(v->{
             ViewRooms();
@@ -46,7 +59,7 @@ public class HomeFragment extends Fragment {
 
         ViewSlider(view);
         setupRecyclerView();
-
+        loadLatestReservation();
         return view;
 
     }
@@ -96,6 +109,55 @@ public class HomeFragment extends Fragment {
             page.setScaleY(1 - (0.25f * absPos));
             page.setAlpha(1 - (0.5f * absPos));
         });
+    }
+
+    private void loadLatestReservation() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("user_ID", 0);
+
+        ServiceReservation latestReservation = databaseHelper.getLatestServiceReservation(userId);
+
+        if (latestReservation != null) {
+            serviceTitle.setText("Spa Appointment");
+            serviceDateTime.setText(formatDateTime(latestReservation.getReservationDateTime()));
+            countdownText.setText("Countdown: " + getTimeDifference(latestReservation.getReservationDateTime()));
+        } else {
+            serviceTitle.setText("No upcoming appointments");
+            serviceDateTime.setText("");
+            countdownText.setText("");
+        }
+    }
+
+    private String formatDateTime(String dateTime) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("EEEE, h:mm a", Locale.getDefault());
+
+        try {
+            Date date = inputFormat.parse(dateTime);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return dateTime;
+        }
+    }
+
+    private String getTimeDifference(String reservationDateTime) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date reservationDate = sdf.parse(reservationDateTime);
+            long diff = reservationDate.getTime() - System.currentTimeMillis();
+
+            if (diff > 0) {
+                long hours = (diff / (1000 * 60 * 60)) % 24;
+                long minutes = (diff / (1000 * 60)) % 60;
+                return hours + " hours " + minutes + " minutes";
+            } else {
+                return "Appointment time passed";
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "Unknown time";
+        }
     }
 
 }

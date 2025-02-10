@@ -5,4 +5,12 @@
         <item>Price Low to High</item>
         <item>Price High to Low</item>
     </string-array>
+    <string-array name="room_type_options">
+        <item>All Rooms</item>
+        <item>Deluxe Ocean View</item>
+        <item>Superior Beach Front</item>
+        <item>Family Suite</item>
+        <item>Luxury Villa</item>
+    </string-array>
+
 </resources>

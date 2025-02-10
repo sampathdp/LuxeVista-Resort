@@ -294,7 +294,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         setService(db, diningCategoryId, "Sri Lankan Seafood Platter", "Fresh seafood caught daily, prepared with authentic spices", 18000.0, 1, R.drawable.dining_seafood);
         setService(db, diningCategoryId, "Sunset High Tea", "Tea experience with snacks while enjoying ocean views", 8000.0, 1, R.drawable.dining_high_tea);
 
-        setService(db, poolCategoryId, "Cabana Rental", "Private poolside cabana for the day with refreshments", 8000.0, 0, R.drawable.pool_cabana);
+        setService(db, poolCategoryId, "Cabana Rental", "Private poolside cabana for the day with refreshments", 8000.0, 0, R.drawable.pool_side_cabana_img);
 
         setService(db, adventureCategoryId, "Scuba Diving", "Guided dive with professional instructors", 30000.0, 1, R.drawable.adventure_diving);
 
@@ -519,6 +519,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return historyItems;
     }
 
+    public ServiceReservation getLatestServiceReservation(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ServiceReservation latestReservation = null;
+
+        String query = "SELECT * FROM " + TABLE_SERVICE_RESERVATION +
+                " WHERE " + COLUMN_USER_ID_FK + " = ? " +
+                " ORDER BY " + COLUMN_RESERVATION_DATETIME + " DESC LIMIT 1";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        if (cursor.moveToFirst()) {
+            latestReservation = new ServiceReservation(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RESERVATION_ID)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_ID_FK)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID_FK)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_R_CURRENT_DATE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_RESERVATION_DATETIME))
+            );
+        }
+
+        cursor.close();
+        db.close();
+        return latestReservation;
+    }
 
 
 }

@@ -39,39 +39,16 @@ public class Service {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public double getPrice() {
         return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public int getAvailability() {
         return availability;
     }
 
-    public void setAvailability(int availability) {
-        this.availability = availability;
-    }
-
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
-
     public byte[] getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
 }

@@ -1,6 +1,9 @@
 package com.dreampixel.luxevistaresort;
 
+import static java.security.AccessController.getContext;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -17,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -40,6 +42,10 @@ public class ServiceAdapter  extends RecyclerView.Adapter<ServiceAdapter.Service
     @Override
     public ServiceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.service_item, parent, false);
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        int userID = sharedPreferences.getInt("user_ID", -1);
+
         return new ServiceViewHolder(view);
     }
 
@@ -80,9 +86,13 @@ public class ServiceAdapter  extends RecyclerView.Adapter<ServiceAdapter.Service
 
             String reservationDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(calendar.getTime());
 
+
             boolean isReserved = dbHelper.reserveService(service.getId(), userId, reservationDateTime);
+
             if (service.getAvailability() != 1) {
                 Toast.makeText(context, "Service Not Available", Toast.LENGTH_SHORT).show();
+            }else if(userId!=-1){
+                Toast.makeText(context, "User not logged in!", Toast.LENGTH_SHORT).show();
             }
             else if (isReserved) {
                 Toast.makeText(context, "Service Reserved for " + new SimpleDateFormat("EEEE, MMM dd", Locale.getDefault()).format(calendar.getTime()) + " at " + randomHour + ":00!", Toast.LENGTH_SHORT).show();

@@ -1,6 +1,7 @@
 package com.dreampixel.luxevistaresort;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 
 
@@ -23,6 +25,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvUserName, tvUserEmail;
     private ImageView ivProfileImage;
     private MaterialCardView btn_edit_profile,btn_view_booking_history;
+    private MaterialButton btn_logout;
     private DatabaseHelper databaseHelper;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class ProfileFragment extends Fragment {
         ivProfileImage = view.findViewById(R.id.iv_profile_picture);
         btn_edit_profile=view.findViewById(R.id.btn_edit_profile);
         btn_view_booking_history=view.findViewById(R.id.btn_booking_history);
+        btn_logout=view.findViewById(R.id.btn_logout);
 
         databaseHelper = new DatabaseHelper(getContext());
 
@@ -46,7 +50,9 @@ public class ProfileFragment extends Fragment {
         btn_view_booking_history.setOnClickListener(v->{
             ViewBookingHistory();
         });
-
+        btn_logout.setOnClickListener(v->{
+            Logout();
+        });
         return view;
     }
 
@@ -82,6 +88,11 @@ public class ProfileFragment extends Fragment {
                 .replace(R.id.fragment_container, new BookingHistoryFragment())
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public void Logout(){
+        Intent intent = new Intent(this.getActivity(), MainActivity.class);
+        startActivity(intent);
     }
 
 }

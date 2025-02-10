@@ -23,7 +23,6 @@ public class ServiceFragment extends Fragment {
     private DatabaseHelper dbHelper;
 
     public ServiceFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -41,10 +40,8 @@ public class ServiceFragment extends Fragment {
 
         dbHelper = new DatabaseHelper(getContext());
 
-        // Fetch all services from the database
         List<Service> serviceList = dbHelper.getAllServices();
 
-        // Set up the adapter
         serviceAdapter = new ServiceAdapter(serviceList, getContext(), userId);
         recyclerView.setAdapter(serviceAdapter);
 
