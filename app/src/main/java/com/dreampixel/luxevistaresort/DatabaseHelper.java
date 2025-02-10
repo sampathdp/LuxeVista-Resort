@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Users Table
     private static final String TABLE_USERS = "users";
-    private static final String COLUMN_ID = "user_id";
+    private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_FULL_NAME = "full_name";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_CONTACT = "contact";
@@ -32,22 +31,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Services Table
     private static final String TABLE_SERVICES = "services";
     private static final String COLUMN_SERVICE_ID = "service_id";
-    private static final String COLUMN_SERVICE_NAME = "name";
+    private static final String COLUMN_SERVICE_NAME = "service_name";
     private static final String COLUMN_SERVICE_DESC = "description";
     private static final String COLUMN_SERVICE_PRICE = "price";
     private static final String COLUMN_SERVICE_AVAILABILITY = "availability";
-    private static final String COLUMN_SERVICE_CATEGORY_ID = "category_id";
-    private static final String COLUMN_SERVICE_IMAGE = "image";
+    private static final String COLUMN_SERVICE_IMAGE = "service_image";
+
     // Service Category Table
     private static final String TABLE_SERVICE_CATEGORIES = "service_categories";
     private static final String COLUMN_CATEGORY_ID = "category_id";
     private static final String COLUMN_CATEGORY_NAME = "category_name";
     private static final String COLUMN_CATEGORY_Desc = "category_description";
+
     // Rooms Table
     private static final String TABLE_ROOMS = "rooms";
-
     private static final String COLUMN_ROOM_ID = "room_id";
-    private static final String COLUMN_ROOM_TYPE = "type";
+    private static final String COLUMN_ROOM_TYPE = "room_type";
     private static final String COLUMN_ROOM_DESCRIPTION = "description";
     private static final String COLUMN_ROOM_PRICE_PER_NIGHT = "price_per_night";
     private static final String COLUMN_ROOM_COUNT = "room_count";
@@ -56,8 +55,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Booking Table
     private static final String TABLE_BOOKINGS = "bookings";
     private static final String COLUMN_BOOKING_ID = "booking_id";
-    private static final String COLUMN_USER_ID = "user_id";
-    private static final String COLUMN_ROOM_ID_FK = "room_id";
     private static final String COLUMN_CHECKIN_DATE = "checkin_date";
     private static final String COLUMN_CHECKOUT_DATE = "checkout_date";
     private static final String COLUMN_BOOKING_STATUS = "status";
@@ -68,9 +65,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_SERVICE_RESERVATION = "serviceReservation";
     public static final String COLUMN_RESERVATION_ID = "reservationID";
     public static final String COLUMN_R_CURRENT_DATE = "currentDate_r";
-    public static final String COLUMN_SERVICE_ID_FK = "serviceID";
-    public static final String COLUMN_USER_ID_FK = "userID";
     public static final String COLUMN_RESERVATION_DATETIME = "reservationDateTime";
+
+    //Foreign Keys
+
+    private static final String COLUMN_USER_ID_FK = "user_id";
+    public static final String COLUMN_SERVICE_ID_FK = "service_id";
+    private static final String COLUMN_ROOM_ID_FK = "room_id";
+    private static final String COLUMN_SERVICE_CATEGORY_ID_FK = "category_id";
 
     private Context context;
 
@@ -82,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create Users Table
         String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + " ("
-                + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_FULL_NAME + " TEXT,"
                 + COLUMN_EMAIL + " TEXT UNIQUE,"
                 + COLUMN_CONTACT + " TEXT,"
@@ -106,9 +108,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_SERVICE_DESC + " TEXT, " +
                 COLUMN_SERVICE_PRICE + " REAL, " +
                 COLUMN_SERVICE_AVAILABILITY + " INTEGER DEFAULT 1, " +
-                COLUMN_SERVICE_CATEGORY_ID + " INTEGER, " +
+                COLUMN_SERVICE_CATEGORY_ID_FK + " INTEGER, " +
                 COLUMN_SERVICE_IMAGE + " BLOB, " +
-                "FOREIGN KEY(" + COLUMN_SERVICE_CATEGORY_ID + ") REFERENCES service_category(category_id))";
+                "FOREIGN KEY(" + COLUMN_SERVICE_CATEGORY_ID_FK + ") REFERENCES "+TABLE_SERVICE_CATEGORIES+"("+COLUMN_CATEGORY_ID+"))";
         db.execSQL(CREATE_SERVICES_TABLE);
 
         // Create Rooms Table
@@ -124,14 +126,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Create Bookings Table
         String CREATE_BOOKINGS_TABLE = "CREATE TABLE " + TABLE_BOOKINGS + " (" +
                 COLUMN_BOOKING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_USER_ID + " INTEGER, " +
+                COLUMN_USER_ID_FK + " INTEGER, " +
                 COLUMN_ROOM_ID_FK + " INTEGER, " +
                 COLUMN_B_CURRENT_DATE + " TEXT NOT NULL, " +
                 COLUMN_CHECKIN_DATE + " TEXT, " +
                 COLUMN_CHECKOUT_DATE + " TEXT, " +
                 COLUMN_BOOKING_STATUS + " TEXT, " +
                 COLUMN_TOTAL_PRICE + " REAL, " +
-                "FOREIGN KEY(" + COLUMN_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_ID + "), " +
+                "FOREIGN KEY(" + COLUMN_USER_ID_FK + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_USER_ID + "), " +
                 "FOREIGN KEY(" + COLUMN_ROOM_ID_FK + ") REFERENCES " + TABLE_ROOMS + "(" + COLUMN_ROOM_ID + "))";
         db.execSQL(CREATE_BOOKINGS_TABLE);
 
@@ -144,7 +146,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_R_CURRENT_DATE + " TEXT NOT NULL, " +
                 COLUMN_RESERVATION_DATETIME + " TEXT NOT NULL, " +
                 "FOREIGN KEY(" + COLUMN_SERVICE_ID_FK + ") REFERENCES " + TABLE_SERVICES + "(" + COLUMN_SERVICE_ID + "), " +
-                "FOREIGN KEY(" + COLUMN_USER_ID_FK + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_ID + "))";
+                "FOREIGN KEY(" + COLUMN_USER_ID_FK + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_USER_ID + "))";
         db.execSQL(CREATE_SERVICE_RESERVATION_TABLE);
 
 
@@ -180,7 +182,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     public boolean checkUserExists(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_ID}, COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?",
+        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_USER_ID}, COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?",
                 new String[]{email, password}, null, null, null);
 
         boolean isAuthenticated = cursor.getCount() > 0;
@@ -195,65 +197,64 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "Spacious room with private balcony, traditional Sri Lankan décor, and stunning Indian Ocean views. Includes ceiling fan and A/C",
                 9800,
                 15,
-                R.drawable.slider_image_1);
+                R.drawable.deluxe_1);
 
         setRoom(db, "Deluxe Ocean View",
                 "Corner unit with expanded balcony, perfect for watching southern coast sunsets. Features local handicraft decorations",
                 9800,
                 12,
-                R.drawable.slider_image_2);
+                R.drawable.deluxe_2);
 
         setRoom(db, "Superior Beach Front",
                 "Direct beach access, outdoor shower, hammock, and private garden. Traditional Sri Lankan architecture with modern amenities",
                 12500,
                 8,
-                R.drawable.slider_image_3);
+                R.drawable.superior_1);
 
         setRoom(db, "Superior Beach Front",
                 "Ground floor unit with veranda, beach views, and tropical garden. Includes outdoor seating area perfect for morning tea",
                 12500,
                 10,
-                R.drawable.slider_image_1);
+                R.drawable.superior_2);
 
         setRoom(db, "Family Suite",
                 "Two-bedroom suite with living area, perfect for families. Features kitchenette and traditional Sri Lankan sitting area",
                 15800,
                 6,
-                R.drawable.slider_image_2);
+                R.drawable.family_1);
 
         setRoom(db, "Family Suite",
                 "Spacious suite with connecting rooms, outdoor dining area, and ocean views. Includes daybed and children's play area",
                 15800,
                 4,
-                R.drawable.slider_image_3);
+                R.drawable.family_2);
 
         setRoom(db, "Luxury Villa",
                 "Private villa with plunge pool, outdoor bathroom, and direct beach access. Features antique colonial furniture and artwork",
                 22000,
                 3,
-                R.drawable.slider_image_1);
+                R.drawable.villa_1);
 
         setRoom(db, "Luxury Villa",
                 "Beachfront villa with private garden, outdoor dining pavilion, and butler service. Includes traditional Sri Lankan décor",
                 22000,
                 2,
-                R.drawable.slider_image_2);
+                R.drawable.villa_2);
 
         setRoom(db, "Deluxe Ocean View",
                 "Upper floor room with panoramic ocean views, rain shower, and traditional carved wooden furniture",
                 9800,
                 10,
-                R.drawable.slider_image_3);
+                R.drawable.deluxe_3);
 
         setRoom(db, "Superior Beach Front",
                 "Beachside room with private terrace, outdoor dining area, and unobstructed ocean views. Features local artwork",
                 12500,
                 7,
-                R.drawable.slider_image_1);
+                R.drawable.superior_3);
 
     }
-    private void setRoom(SQLiteDatabase db, String type, String description, double pricePerNight,
-                         int roomCount, int imageResourceId) {
+    private void setRoom(SQLiteDatabase db, String type, String description, double pricePerNight,int roomCount, int imageResourceId) {
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_ROOM_TYPE, type);
@@ -272,33 +273,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         setCategory(db, "Spa", "Relaxing spa treatments");
         setCategory(db, "Fine Dining", "Luxury gourmet experiences");
         setCategory(db, "Poolside Cabanas", "Exclusive poolside retreats");
-        setCategory(db, "Beach Tours", "Guided scenic tours");
-        setCategory(db, "Water Sports", "Thrilling water adventures");
+        setCategory(db, "adventure", "Guided scenic tours");
     }
     private void setCategory(SQLiteDatabase db, String name, String description) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_CATEGORY_NAME, name);
         values.put(COLUMN_CATEGORY_Desc, description);
-
-        // Use insertWithOnConflict to avoid duplicate errors
         db.insertWithOnConflict(TABLE_SERVICE_CATEGORIES, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
     private void insertServices(SQLiteDatabase db) {
         int spaCategoryId = getCategoryId(db, "Spa");
         int diningCategoryId = getCategoryId(db, "Fine Dining");
         int poolCategoryId = getCategoryId(db, "Poolside Cabanas");
+        int adventureCategoryId=getCategoryId(db, "adventure");
 
-        setService(db, spaCategoryId, "Full Body Massage", "60-minute relaxation massage", 100.0,1, R.drawable.slider_image_1);
-        setService(db, spaCategoryId, "Hot Stone Therapy", "Luxury heated stone therapy", 120.0,1, R.drawable.slider_image_2);
+        setService(db, spaCategoryId, "Full Body Massage", "60-minute relaxation massage with essential oils", 10000.0, 1, R.drawable.spa_massage);
+        setService(db, spaCategoryId, "Ayurvedic Treatment", "Traditional Sri Lankan herbal therapy", 15000.0, 1, R.drawable.spa_ayurveda);
 
-        setService(db, diningCategoryId, "Romantic Dinner", "Private beachside dining", 200.0,0, R.drawable.slider_image_2);
-        setService(db, diningCategoryId, "Wine Tasting", "Exclusive wine tasting session", 150.0,1, R.drawable.slider_image_2);
+        setService(db, diningCategoryId, "Romantic Dinner", "Private beachside dining with a gourmet 5-course meal", 20000.0, 0, R.drawable.dining_romantic);
+        setService(db, diningCategoryId, "Sri Lankan Seafood Platter", "Fresh seafood caught daily, prepared with authentic spices", 18000.0, 1, R.drawable.dining_seafood);
+        setService(db, diningCategoryId, "Sunset High Tea", "Tea experience with snacks while enjoying ocean views", 8000.0, 1, R.drawable.dining_high_tea);
 
-        setService(db, poolCategoryId, "Cabana Rental", "Private poolside cabana for the day", 80.0,0, R.drawable.slider_image_1);
+        setService(db, poolCategoryId, "Cabana Rental", "Private poolside cabana for the day with refreshments", 8000.0, 0, R.drawable.pool_cabana);
+
+        setService(db, adventureCategoryId, "Scuba Diving", "Guided dive with professional instructors", 30000.0, 1, R.drawable.adventure_diving);
+
     }
     private void setService(SQLiteDatabase db, int categoryId, String name, String description, double price,int availability, int imageResourceId) {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_SERVICE_CATEGORY_ID, categoryId);
+        values.put(COLUMN_SERVICE_CATEGORY_ID_FK, categoryId);
         values.put(COLUMN_SERVICE_NAME, name);
         values.put(COLUMN_SERVICE_DESC, description);
         values.put(COLUMN_SERVICE_PRICE, price);
@@ -324,7 +327,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return categoryId;
 
     }
-
     private byte[] getImageBytesFromDrawable(int drawableId) {
         try {
             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
@@ -338,7 +340,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return null;
     }
-
     public List<Room> getLatestRooms(int query) {
         List<Room> roomList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -370,16 +371,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return roomList;
     }
-
     public User getUserByEmail(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         User user = null;
 
-        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_ID, COLUMN_FULL_NAME, COLUMN_EMAIL, COLUMN_PROFILE_IMAGE},
+        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_USER_ID, COLUMN_FULL_NAME, COLUMN_EMAIL, COLUMN_PROFILE_IMAGE},
                 COLUMN_EMAIL + "=?", new String[]{email}, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            int userId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
+            int userId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID));
             String fullName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FULL_NAME));
             String userEmail = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL));
             byte[] profileImage = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_PROFILE_IMAGE));
@@ -391,7 +391,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return user;
     }
-
     public boolean updateUserDetails(String email, String fullName, String telephone, String password, byte[] profileImage) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -405,12 +404,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return rowsAffected > 0;
     }
-
     public Room getRoomDetails(int roomId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("Rooms", null, "room_id = ?", new String[]{String.valueOf(roomId)}, null, null, null);
-
-
 
         if (cursor != null && cursor.moveToFirst()) {
             String roomType = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ROOM_TYPE));
@@ -422,12 +418,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return null;
     }
-
     public boolean insertRoomBooking(int userID, int roomID, String checkInDate, String checkOutDate, String status, double totalPrice) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put(COLUMN_USER_ID, userID);
+        values.put(COLUMN_USER_ID_FK, userID);
         values.put(COLUMN_ROOM_ID_FK, roomID);
         values.put(COLUMN_CHECKIN_DATE, checkInDate);
         values.put(COLUMN_CHECKOUT_DATE, checkOutDate);
@@ -454,7 +449,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_DESC));
                 double price = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_PRICE));
                 int availability = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_AVAILABILITY));
-                int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_CATEGORY_ID));
+                int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_CATEGORY_ID_FK));
                 byte[] image = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_IMAGE));
 
                 Service service = new Service(id, name, description, price, availability, categoryId, image);
@@ -486,7 +481,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ", r." + COLUMN_ROOM_TYPE + ", b." + COLUMN_CHECKIN_DATE + ", b." + COLUMN_CHECKOUT_DATE +
                 ", b." + COLUMN_TOTAL_PRICE + " FROM " + TABLE_BOOKINGS + " b " +
                 " JOIN " + TABLE_ROOMS + " r ON b." + COLUMN_ROOM_ID_FK + " = r." + COLUMN_ROOM_ID +
-                " WHERE b." + COLUMN_USER_ID + " = ? ORDER BY b." + COLUMN_B_CURRENT_DATE + " DESC";
+                " WHERE b." + COLUMN_USER_ID_FK + " = ? ORDER BY b." + COLUMN_B_CURRENT_DATE + " DESC";
 
         Cursor cursor = db.rawQuery(queryRooms, new String[]{String.valueOf(userId)});
         if (cursor.moveToFirst()) {
