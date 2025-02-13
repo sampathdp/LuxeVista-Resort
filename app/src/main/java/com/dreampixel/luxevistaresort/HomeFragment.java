@@ -96,9 +96,10 @@ public class HomeFragment extends Fragment {
         ViewPager2 featuredCarousel = view.findViewById(R.id.featuredCarousel);
 
         List<Integer> images = Arrays.asList(
-                R.drawable.slider_image_1,
-                R.drawable.slider_image_2,
-                R.drawable.slider_image_3
+                R.drawable.villa_1,
+                R.drawable.g2,
+                R.drawable.spa_massage,
+                R.drawable.dining_romantic
         );
 
         CarouselAdapter adapter = new CarouselAdapter(images);

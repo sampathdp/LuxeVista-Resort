@@ -42,21 +42,9 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(v->SignIn());
         btn_signUp_Link.setOnClickListener(v -> OpenSignUpPage());
 
-        Slider(view);
-
         return view;
     }
-    void Slider(View view){
-        List<Integer> images = Arrays.asList(
-                R.drawable.slider_image_1,
-                R.drawable.slider_image_2,
-                R.drawable.slider_image_3
-        );
 
-        ViewPager2 viewPager = view.findViewById(R.id.imageSlider);
-        SliderAdapter adapter = new SliderAdapter(images);
-        viewPager.setAdapter(adapter);
-    }
     void OpenSignUpPage(){
 
         if (getActivity() != null) {

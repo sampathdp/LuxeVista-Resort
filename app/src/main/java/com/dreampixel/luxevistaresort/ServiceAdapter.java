@@ -44,7 +44,7 @@ public class ServiceAdapter  extends RecyclerView.Adapter<ServiceAdapter.Service
         View view = LayoutInflater.from(context).inflate(R.layout.service_item, parent, false);
 
         SharedPreferences sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        int userID = sharedPreferences.getInt("user_ID", -1);
+        userId = sharedPreferences.getInt("user_ID", -1);
 
         return new ServiceViewHolder(view);
     }
@@ -91,7 +91,7 @@ public class ServiceAdapter  extends RecyclerView.Adapter<ServiceAdapter.Service
 
             if (service.getAvailability() != 1) {
                 Toast.makeText(context, "Service Not Available", Toast.LENGTH_SHORT).show();
-            }else if(userId!=-1){
+            }else if(userId==-1){
                 Toast.makeText(context, "User not logged in!", Toast.LENGTH_SHORT).show();
             }
             else if (isReserved) {
