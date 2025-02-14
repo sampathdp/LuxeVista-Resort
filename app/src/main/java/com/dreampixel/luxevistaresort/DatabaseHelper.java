@@ -435,7 +435,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return result != -1;
     }
-
     public List<Service> getAllServices() {
         List<Service> serviceList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -460,7 +459,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return serviceList;
     }
-
     public boolean reserveService(int serviceId, int userId, String reservationDateTime) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -472,7 +470,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.insert(TABLE_SERVICE_RESERVATION, null, values);
         return result != -1;
     }
-
     public List<BookingHistoryItem> getUserBookingHistory(int userId) {
         List<BookingHistoryItem> historyItems = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -518,7 +515,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return historyItems;
     }
-
     public ServiceReservation getLatestServiceReservation(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
         ServiceReservation latestReservation = null;
