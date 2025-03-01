@@ -448,10 +448,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_DESC));
                 double price = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_PRICE));
                 int availability = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_AVAILABILITY));
-                int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_CATEGORY_ID_FK));
                 byte[] image = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_IMAGE));
 
-                Service service = new Service(id, name, description, price, availability, categoryId, image);
+                Service service = new Service(id, name, description, price, availability, image);
                 serviceList.add(service);
 
             } while (cursor.moveToNext());
@@ -519,19 +518,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ServiceReservation latestReservation = null;
 
-        String query = "SELECT * FROM " + TABLE_SERVICE_RESERVATION +
-                " WHERE " + COLUMN_USER_ID_FK + " = ? " +
-                " ORDER BY " + COLUMN_RESERVATION_DATETIME + " DESC LIMIT 1";
+        String query = "SELECT sr.*, s.service_name FROM " + TABLE_SERVICE_RESERVATION + " sr " +
+                "JOIN " + TABLE_SERVICES + " s ON sr." + COLUMN_SERVICE_ID_FK + " = s." + COLUMN_SERVICE_ID +
+                " WHERE sr." + COLUMN_USER_ID_FK + " = ? " +
+                " ORDER BY sr." + COLUMN_RESERVATION_DATETIME + " DESC LIMIT 1";
 
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
 
         if (cursor.moveToFirst()) {
             latestReservation = new ServiceReservation(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RESERVATION_ID)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_ID_FK)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID_FK)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_R_CURRENT_DATE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_RESERVATION_DATETIME))
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_RESERVATION_DATETIME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SERVICE_NAME))
             );
         }
 

@@ -27,9 +27,9 @@ public class WelcomeFragment extends Fragment {
 
     void Slider(View view){
         List<Integer> images = Arrays.asList(
+                R.drawable.g2,
                 R.drawable.slider_image_1,
-                R.drawable.slider_image_2,
-                R.drawable.slider_image_3
+                R.drawable.dining_romantic
         );
 
         ViewPager2 viewPager = view.findViewById(R.id.imageSlider);

@@ -6,16 +6,14 @@ public class Service {
     private String description;
     private double price;
     private int availability;
-    private int categoryId;
     private byte[] image;
 
-    public Service(int id, String name, String description, double price, int availability, int categoryId, byte[] image) {
+    public Service(int id, String name, String description, double price, int availability, byte[] image) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.availability = availability;
-        this.categoryId = categoryId;
         this.image = image;
     }
 

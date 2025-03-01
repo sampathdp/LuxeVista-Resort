@@ -103,7 +103,7 @@ public class RoomSectionFragment extends Fragment {
                 filteredRooms.add(room);
             }
         }
-        applySorting(); // Ensure sorting is maintained after filtering
+        applySorting();
     }
 
     private String getSelectedRoomType() {

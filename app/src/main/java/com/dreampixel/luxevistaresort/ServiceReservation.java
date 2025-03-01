@@ -1,23 +1,19 @@
 package com.dreampixel.luxevistaresort;
 
 public class ServiceReservation {
-
-    private int reservationId;
-    private int serviceId;
-    private int userId;
-    private String currentDate;
     private String reservationDateTime;
+    private String serviceName;
+    public ServiceReservation(String reservationDateTime, String serviceName) {
 
-    public ServiceReservation(int reservationId, int serviceId, int userId, String currentDate, String reservationDateTime) {
-        this.reservationId = reservationId;
-        this.serviceId = serviceId;
-        this.userId = userId;
-        this.currentDate = currentDate;
         this.reservationDateTime = reservationDateTime;
+        this.serviceName = serviceName;
     }
 
     public String getReservationDateTime() {
         return reservationDateTime;
+    }
 
+    public String getServiceName() {
+        return serviceName;
     }
 }

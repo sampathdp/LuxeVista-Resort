@@ -64,8 +64,6 @@ public class HomeFragment extends Fragment {
 
     }
 
-
-
     private void setupRecyclerView() {
         List<Room> rooms = databaseHelper.getLatestRooms(1);
         RoomAdapter adapter = new RoomAdapter(getContext(),rooms);
@@ -119,7 +117,7 @@ public class HomeFragment extends Fragment {
         ServiceReservation latestReservation = databaseHelper.getLatestServiceReservation(userId);
 
         if (latestReservation != null) {
-            serviceTitle.setText("Spa Appointment");
+            serviceTitle.setText(latestReservation.getServiceName());
             serviceDateTime.setText(formatDateTime(latestReservation.getReservationDateTime()));
             countdownText.setText("Countdown: " + getTimeDifference(latestReservation.getReservationDateTime()));
         } else {
@@ -128,6 +126,7 @@ public class HomeFragment extends Fragment {
             countdownText.setText("");
         }
     }
+
 
     private String formatDateTime(String dateTime) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());

@@ -19,7 +19,6 @@ public class ServiceFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ServiceAdapter serviceAdapter;
-    private List<Service> serviceList;
     private DatabaseHelper dbHelper;
 
     public ServiceFragment() {

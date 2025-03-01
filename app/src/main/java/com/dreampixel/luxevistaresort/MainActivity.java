@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
         transaction.commit();
 
-        // Save flag after commit to avoid premature update
         if (isFirstLaunch) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("isFirstLaunch", false);

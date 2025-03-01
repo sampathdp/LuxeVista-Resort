@@ -79,7 +79,6 @@ public class EditProfileFragment extends Fragment {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
                 ivProfileImage.setImageBitmap(bitmap);
 
-                // Convert bitmap to byte array (BLOB)
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 profileImage = stream.toByteArray();
